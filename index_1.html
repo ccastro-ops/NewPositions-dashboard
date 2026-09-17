@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seguimiento — Senior Automation SDET (IA)</title>
+<style>
+  :root { color-scheme: light; }
+
+  .viz-root {
+    --brand-red:    #BB240A;
+    --brand-blue:   #322470;
+    --brand-cream:  #E5DBD1;
+    --brand-yellow: #EDCC4D;
+    --brand-brown:  #623F1B;
+    --brand-black:  #0B0B0B;
+
+    --page-plane:     #FAF6F0;
+    --surface-1:      #FFFFFF;
+    --surface-tint:   #E5DBD1;
+    --text-primary:   #0B0B0B;
+    --text-secondary: #623F1B;
+    --text-muted:     #8A7563;
+    --gridline:       #E9E0D6;
+    --baseline:       #D8CBBC;
+    --border:         rgba(98,63,27,0.16);
+    --accent:         #322470;
+    --accent-ink:     #FFFFFF;
+    --status-progress:#BB240A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --page-plane:     #0B0B0B;
+      --surface-1:      #1E140B;
+      --surface-tint:   #2A1D10;
+      --text-primary:   #F3EAE0;
+      --text-secondary: #E5DBD1;
+      --text-muted:     #B7A48F;
+      --gridline:       #362A1D;
+      --baseline:       #4A3A28;
+      --border:         rgba(229,219,209,0.14);
+      --accent:         #6C5CD8;
+      --accent-ink:     #FFFFFF;
+      --status-progress:#E1543A;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --page-plane:     #0B0B0B;
+    --surface-1:      #1E140B;
+    --surface-tint:   #2A1D10;
+    --text-primary:   #F3EAE0;
+    --text-secondary: #E5DBD1;
+    --text-muted:     #B7A48F;
+    --gridline:       #362A1D;
+    --baseline:       #4A3A28;
+    --border:         rgba(229,219,209,0.14);
+    --accent:         #6C5CD8;
+    --accent-ink:     #FFFFFF;
+    --status-progress:#E1543A;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--page-plane); color: var(--text-primary); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 32px 20px 60px; }
+  header.top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .subtitle { color: var(--text-primary); font-size: 14px; margin: 0; }
+  .updated { color: var(--text-primary); font-size: 13px; margin-top: 6px; }
+  .toggle-group { display: flex; gap: 8px; }
+  button.toggle-btn { border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); border-radius: 8px; padding: 8px 12px; font-size: 13px; cursor: pointer; }
+  button.toggle-btn.accent { background: var(--accent); color: var(--accent-ink); border-color: transparent; font-weight: 600; }
+  .tab-bar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 28px; border-bottom: 1px solid var(--border); }
+  .tab-btn { border: none; background: transparent; color: var(--text-primary); font-size: 13.5px; font-weight: 600; padding: 10px 4px; margin-right: 22px; cursor: pointer; border-bottom: 3px solid transparent; opacity: 0.55; }
+  .tab-btn:hover { opacity: 0.85; }
+  .tab-btn.active { opacity: 1; border-bottom-color: var(--accent); color: var(--accent); }
+  .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .stat-tile { padding: 16px; }
+  .stat-label { font-size: 12px; color: var(--text-primary); margin-bottom: 8px; }
+  .stat-value { font-size: 28px; font-weight: 600; line-height: 1; }
+  .stat-hint { font-size: 11px; color: var(--text-primary); margin-top: 6px; }
+  section { margin-bottom: 32px; }
+  h2 { font-size: 16px; margin: 0 0 3px; display: flex; align-items: center; }
+  .section-hint { font-weight: 400; font-size: 12px; color: var(--text-primary); display: block; margin: 0 0 14px 20px; }
+  h2::before { content: ""; width: 11px; height: 11px; border-radius: 3px; margin-right: 9px; flex: none; }
+  h2.accent-blue::before { background: var(--brand-blue); }
+  h2.accent-red::before { background: var(--brand-red); }
+  h2.accent-yellow::before { background: var(--brand-yellow); }
+  h2.accent-brown::before { background: var(--brand-brown); }
+  .analysis-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 20px; }
+  @media (max-width: 560px) { .analysis-grid { grid-template-columns: 1fr; } }
+  .analysis-item .field-label { color: var(--text-primary); font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em; margin-bottom: 3px; }
+  .analysis-item .field-value { font-size: 13.5px; }
+  .analysis-item .field-value.pending { color: var(--text-primary); font-style: italic; }
+  .stat-tile.accent-red    { border-left: 4px solid var(--brand-red); }
+  .stat-tile.accent-blue   { border-left: 4px solid var(--brand-blue); }
+  .stat-tile.accent-brown  { border-left: 4px solid var(--brand-brown); }
+  .stat-tile.accent-yellow { border-left: 4px solid var(--brand-yellow); }
+
+  /* Project status timeline */
+  .timeline { display: flex; align-items: flex-start; margin: 4px 0 4px; }
+  .timeline-step { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+  .timeline-step:not(:first-child)::before { content: ""; position: absolute; top: 11px; left: -50%; width: 100%; height: 2px; background: var(--baseline); z-index: 0; }
+  .timeline-step.done:not(:first-child)::before { background: var(--accent); }
+  .timeline-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--surface-1); border: 2px solid var(--baseline); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; z-index: 1; color: var(--text-primary); }
+  .timeline-step.done .timeline-dot { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .timeline-step.current .timeline-dot { background: var(--surface-1); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 4px rgba(50,36,112,0.15); }
+  .timeline-label { font-size: 11px; margin-top: 8px; color: var(--text-primary); max-width: 110px; line-height: 1.3; padding: 0 4px; }
+  .timeline-step.current .timeline-label { color: var(--text-primary); font-weight: 700; }
+  .timeline-step.done .timeline-label { color: var(--text-primary); }
+  @media (max-width: 640px) { .timeline-label { font-size: 9.5px; max-width: 78px; } .timeline-dot { width: 20px; height: 20px; } }
+  .status-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+  .status-stats-grid .stat-tile { background: var(--page-plane); border: 1px solid var(--border); border-radius: 10px; }
+
+  /* Mode / distribution chart */
+  .mode-chart { display: flex; flex-direction: column; gap: 10px; }
+  .mode-row { display: grid; grid-template-columns: 190px 1fr; align-items: center; gap: 10px; }
+  @media (max-width: 720px) { .mode-row { grid-template-columns: 1fr; gap: 4px; } }
+  .mode-row-label { font-size: 12.5px; color: var(--text-primary); }
+  .mode-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: var(--gridline); }
+  .mode-seg.good { background: #0ca30c; }
+  .mode-seg.warning { background: #fab219; }
+  .mode-seg.critical { background: #d03b3b; }
+  .mode-seg.pending { background: var(--baseline); }
+  .mode-row-count { font-size: 11.5px; color: var(--text-primary); }
+  .mode-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--gridline); }
+  .mode-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-primary); }
+  .mode-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .mode-legend-dot.good { background: #0ca30c; }
+  .mode-legend-dot.warning { background: #fab219; }
+  .mode-legend-dot.critical { background: #d03b3b; }
+  .mode-legend-dot.pending { background: var(--baseline); }
+
+  /* Chip list (locations) */
+  .chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: var(--surface-tint); color: var(--text-primary); border: 1px solid var(--border); }
+
+  .evolution-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .evolution-grid { grid-template-columns: 1fr; } }
+  .evo-card { border-top: 3px solid var(--baseline); }
+  .evo-card.before-card { border-top-color: var(--brand-brown); }
+  .evo-card.after-card { border-top-color: var(--brand-blue); }
+  .evo-card h3 { font-size: 14px; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  .evo-tag { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+  .evo-tag.before { background: rgba(98,63,27,0.16); color: var(--brand-brown); }
+  .evo-tag.after { background: var(--brand-yellow); color: var(--brand-black); }
+  .evo-card ul { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--text-primary); line-height: 1.6; }
+  .evo-card li { margin-bottom: 6px; }
+  details.full-text { margin-top: 12px; border-top: 1px solid var(--gridline); padding-top: 10px; }
+  details.full-text summary { cursor: pointer; font-size: 12.5px; color: var(--accent); font-weight: 600; }
+  details.full-text .body-text { font-size: 13px; color: var(--text-primary); line-height: 1.6; margin-top: 10px; white-space: pre-wrap; }
+  .empty-state { text-align: center; padding: 24px 20px; color: var(--text-primary); font-size: 13.5px; border: 1px dashed var(--baseline); border-radius: 10px; margin-bottom: 16px; }
+  .empty-state.accent-yellow { border-color: rgba(237,204,77,0.7); }
+  .empty-state strong { color: var(--text-primary); display: block; margin-bottom: 6px; font-size: 14px; }
+  .progress-note { font-size: 12.5px; color: var(--text-primary); margin: 0 0 12px; }
+  .candidate-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .candidate-card + .candidate-card { margin-top: 10px; }
+  .candidate-summary { padding: 14px 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 600; list-style: none; }
+  .candidate-summary::-webkit-details-marker { display: none; }
+  .candidate-summary .chev { color: var(--text-primary); font-size: 12px; }
+  .candidate-name-done { color: #0ca30c; }
+  .candidate-badge { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--brand-brown); background: rgba(237,204,77,0.3); border: 1px solid transparent; padding: 2px 8px; border-radius: 999px; margin-left: 10px; }
+  .candidate-body { padding: 0 16px 16px; }
+  .field-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 20px; font-size: 13px; }
+  @media (max-width: 560px) { .field-grid { grid-template-columns: 1fr; } }
+  .field-label { color: var(--text-primary); font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em; margin-bottom: 2px; }
+  .field-value { color: var(--text-primary); }
+  .field-value a { color: var(--accent); }
+  .field-value.pending { color: var(--text-primary); font-style: italic; }
+  .checklist { margin-top: 16px; border-top: 1px solid var(--gridline); padding-top: 12px; }
+  .checklist-title { font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em; color: var(--text-primary); margin-bottom: 8px; }
+  .checklist-row { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--gridline); }
+  .checklist-row:last-child { border-bottom: none; }
+  .checklist-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .checklist-dot.good { background: #0ca30c; }
+  .checklist-dot.warning { background: #fab219; }
+  .checklist-dot.critical { background: #d03b3b; }
+  .checklist-dot.pending { background: var(--baseline); }
+  .checklist-label { flex: 1; }
+  .checklist-status { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; padding: 2px 8px; border-radius: 999px; flex: none; }
+  .checklist-status.good { color: #0ca30c; background: rgba(12,163,12,0.12); }
+  .checklist-status.warning { color: #8A6D00; background: rgba(250,178,25,0.18); }
+  .checklist-status.critical { color: #d03b3b; background: rgba(208,59,59,0.12); }
+  .checklist-status.pending { color: var(--text-primary); background: var(--page-plane); }
+  .extra-skills { margin-top: 14px; border-top: 1px solid var(--gridline); padding-top: 12px; }
+  .extra-skills .field-value { font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <h1 id="jdTitleEl">Senior Automation SDET (IA) — Outpost QA</h1>
+      <p class="subtitle" id="jdSubtitleEl"></p>
+      <p class="updated" data-i18n="updatedLabel"></p>
+    </div>
+    <div class="toggle-group">
+      <button class="toggle-btn accent" id="langBtn" onclick="toggleLang()"></button>
+    </div>
+  </header>
+
+  <div class="tab-bar" id="tabBar"></div>
+
+  <section>
+    <h2 class="accent-red"><span data-i18n="statStatusLabel"></span></h2>
+    <p class="section-hint" data-i18n="statStatusHint"></p>
+    <div class="card" id="statusCard"></div>
+  </section>
+
+  <section>
+    <h2 class="accent-blue"><span id="overviewTitleText"></span></h2>
+    <p class="section-hint" id="overviewHintText"></p>
+    <div class="evolution-grid" id="overviewCard"></div>
+  </section>
+
+  <section>
+    <h2 class="accent-brown"><span data-i18n="analysisTitle"></span></h2>
+    <p class="section-hint" data-i18n="analysisHint"></p>
+    <div class="card" id="analysisCard"></div>
+  </section>
+
+  <section>
+    <h2 class="accent-red"><span data-i18n="candidatesTitle"></span></h2>
+    <p class="section-hint" data-i18n="candidatesHint"></p>
+    <p class="progress-note" id="candidatesProgressNote" data-i18n="candidatesProgress"></p>
+
+    <div id="candidatesList"></div>
+  </section>
+
+  <section>
+    <h2 class="accent-yellow"><span data-i18n="companiesTitle"></span></h2>
+    <p class="section-hint" data-i18n="companiesHint"></p>
+
+    <div id="companiesList"></div>
+  </section>
+
+
+</div>
+</div>
+
+<script>
+  var CALL_DATA_MIN_ITEMS = 4;
+
+  function emptyChecklist(reqs) {
+    var c = {};
+    reqs.forEach(function(i) { c[i.key] = ""; });
+    return c;
+  }
+
+  // Se considera que ya hay datos de llamada capturados cuando al menos 4
+  // de los puntos del checklist de la vacante tienen un valor (Verde/Amarillo/Rojo/NA, etc.).
+  function hasCallData(c, cfg) {
+    var filled = cfg.requirements.filter(function(i) { return (c.checklist[i.key] || '').trim(); }).length;
+    return filled >= CALL_DATA_MIN_ITEMS;
+  }
+
+  // Etapas del proyecto — mueve currentStepIndex conforme avanza (0 = primera etapa). Compartidas por las 3 vacantes.
+  var PROJECT_STEPS = [
+    { key: "marketResearch", es: "Investigación de mercado", en: "Market research" },
+    { key: "marketResearchClosed", es: "Investigación cerrada", en: "Market research closed" },
+    { key: "workingJD", es: "Trabajando en Job Description", en: "Working on Job Description" },
+    { key: "salaryDetermined", es: "Rango salarial determinado", en: "Salary range determined" },
+    { key: "positionFinalized", es: "Posición finalizada", en: "Position finalized" }
+  ];
+
+  // Niveles de seniority por años de experiencia (definidos por Outpost) — por ahora
+  // solo definidos para SDET; en las otras vacantes se muestra el rango de años sin nivel.
+  var SDET_SENIORITY_LEVELS = [
+    { key: "L1", min: 0, max: 2 },
+    { key: "L2", min: 3, max: 5 },
+    { key: "L3", min: 6, max: Infinity }
+  ];
+  function seniorityLevel(years, cfg) {
+    if (!cfg.hasSeniorityLevels || years === null || years === undefined) return null;
+    for (var i = 0; i < cfg.seniorityLevels.length; i++) {
+      var lvl = cfg.seniorityLevels[i];
+      if (years >= lvl.min && years <= lvl.max) return lvl.key;
+    }
+    return null;
+  }
+
+  var SDET_REQUIREMENTS = [
+    { key: "ingles", es: "Inglés B2 o superior", en: "English B2 or higher" },
+    { key: "experiencia", es: "6+ años de experiencia en ingeniería de software", en: "6+ years of software engineering experience" },
+    { key: "typescript", es: "2+ años de experiencia con TypeScript", en: "2+ years of experience with TypeScript" },
+    { key: "playwright", es: "3+ años de experiencia con Playwright", en: "3+ years of experience with Playwright" },
+    { key: "iaPractica", es: "Experiencia práctica construyendo/manteniendo automatización con IA", en: "Hands-on experience building/maintaining AI-driven automation" },
+    { key: "validacionIA", es: "Capacidad de validar y revisar código generado por IA", en: "Ability to validate and review AI-generated code" },
+    { key: "agile", es: "Experiencia en equipos Kanban/Scrum", en: "Experience on Kanban/Scrum teams" },
+    { key: "comunicacion", es: "Comunicación escrita y verbal sólida", en: "Strong written and verbal communication" }
+  ];
+
+  var HARDWARE_REQUIREMENTS = [
+    { key: "ingles", es: "Inglés profesional, de cara al cliente (empresas de hardware en EE. UU.)", en: "Professional, client-facing English (with US hardware companies)" },
+    { key: "experienciaNPI", es: "Experiencia sustancial en NPI/test engineering, con múltiples ramps completos EVT→DVT→PVT en manufactureras (CM)", en: "Substantial NPI/manufacturing test engineering experience, with multiple full EVT→DVT→PVT ramps at contract manufacturers" },
+    { key: "fixtures", es: "Diseño y bring-up de test fixtures; cobertura de pruebas funcional, ICT y/o end-of-line", en: "Test fixture design/bring-up; functional, ICT, and/or end-of-line test coverage" },
+    { key: "yieldFA", es: "Disciplina sólida de failure analysis y yield en una línea de producción", en: "Strong failure analysis and yield discipline on a production line" },
+    { key: "cmChina", es: "Experiencia directa trabajando en o con manufactureras (CM) chinas, o CMs comparables en el extranjero", en: "Direct experience working in or with Chinese contract manufacturers (or comparable overseas CM environments)" },
+    { key: "viajes", es: "Elegible y dispuesto a viajar internacionalmente de forma rotativa (pasaporte vigente, puede obtener visa de negocios a China)", en: "Eligible and willing to travel internationally on a rotational basis (valid passport; able to obtain China business visas)" },
+    { key: "codingScripting", es: "Deseable: habilidad de programación/scripting para automatizar pruebas (Python, LabVIEW/TestStand o similar)", en: "Nice-to-have: coding/scripting ability for test automation (Python, LabVIEW/TestStand, or similar)" },
+    { key: "roboticsBackground", es: "Deseable: background en robótica o hardware conectado (radios/comms, baterías/power, actuadores)", en: "Nice-to-have: robotics or connected-hardware background (radios/comms, batteries/power, actuators)" }
+  ];
+
+  var BDR_REQUIREMENTS = [
+    { key: "ingles", es: "Inglés casi nativo, escrito y hablado (C1 o superior)", en: "Near-native English, written and spoken (C1 or higher)" },
+    { key: "experienciaOutbound", es: "2–4 años en desarrollo de ventas B2B outbound con productos o servicios complejos/técnicos (SaaS, herramientas para desarrolladores, servicios técnicos), idealmente a compradores en EE. UU.", en: "2–4 years in outbound B2B sales/business development selling complex or technical products or services (SaaS, developer tools, or technical services) — ideally to US-based buyers" },
+    { key: "enfoqueCuentas", es: "Enfoque de investigación basado en cuentas (account-based), no solo trabajar una lista por volumen", en: "A demonstrated research-led, account-based approach — not working a list purely on volume" },
+    { key: "curiosidadTecnica", es: "Curiosidad técnica / capacidad de volverse fluido en temas de QA y testing (no requiere carrera en Ciencias de la Computación)", en: "Technical curiosity / ability to become fluent in software quality and testing (a CS degree is not required)" },
+    { key: "crm", es: "Hábitos disciplinados de CRM y herramientas modernas de ventas (LinkedIn Sales Navigator, secuenciadores de correo, dialers)", en: "Disciplined CRM habits and comfort with modern sales tooling (LinkedIn Sales Navigator, email sequencing tools, dialers)" },
+    { key: "coachability", es: "Alta coachability y bajo ego — disposición a actuar rápido sobre feedback del CEO", en: "High coachability and low ego — expected to act on the CEO's feedback fast" },
+    { key: "mentalidadAnalitica", es: "Mentalidad analítica y autodirección: mide qué está funcionando y ajusta", en: "Strong analytical mindset and self-direction: measures what is working and adjusts" },
+    { key: "experienciaHardwareQA", es: "Deseable: experiencia vendiendo a hardware/industrias reguladas de EE. UU., o exposición a QA/testing de software", en: "Nice-to-have: experience selling into US hardware/regulated industries, or exposure to software QA/testing" }
+  ];
+
+  var SDET_CANDIDATES = [
+    { name: "Andrea Michel Acuña Acosta", shortName: "Michel Acosta", yearsExperience: 9, linkedin: "https://www.linkedin.com/in/michelacostaa/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001637272&submodule=Candidates", age: "30 años aproximado", location: "Hermosillo", seniority: "9 años de experiencia en ingeniería de software", tools: "Claude (generación de código/automatización)", aiToolTags: ["Claude"], languages: "No proporcionado", salary: "$50,000 MXN", checklist: { ingles: "Amarillo", experiencia: "Verde", typescript: "", playwright: "Rojo", iaPractica: "Amarillo", validacionIA: "Verde", agile: "NA", comunicacion: "Amarillo" }, extraSkills: "Cypress (herramienta principal de automatización); ha construido frameworks de automatización desde cero. Aún no ha utilizado Playwright." },
+    { name: "Derek Obied Melendez Franco", shortName: "Derek Melendez", yearsExperience: 4, linkedin: "https://www.linkedin.com/in/derek-obied-melendez-franco-102203279/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001642114&submodule=Candidates", age: "30 años aproximado", location: "Chihuahua", seniority: "L2 (4 años de experiencia)", tools: "", aiToolTags: [], languages: "Python, Java, JavaScript, TypeScript, C#, SQL", salary: "", checklist: emptyChecklist(SDET_REQUIREMENTS), extraSkills: "" },
+    { name: "Edgar Ivan Garza Dimas", shortName: "Edgar Garza", yearsExperience: 22, yearsApprox: true, linkedin: "https://www.linkedin.com/in/edgar-iv%C3%A1n-garza-dimas-bb619416b/", zoho: "", age: "45 años", location: "Reynosa, Tamaulipas", seniority: "Quality / Continuous Improvement Engineer — 22-23 años en industria maquiladora (17 en calidad); perfil de manufactura/hardware, no de automatización de software. En la llamada se le propuso como alternativa la vacante de Senior Hardware Test Engineer.", tools: "No ha implementado IA directamente en equipos de prueba; la ha usado de forma general para mejoras de proceso, sin detalle específico de herramienta.", aiToolTags: [], languages: "Ninguno — no realiza programación directa (confirmado explícitamente en la llamada).", salary: "~$40,000 MXN mensuales (compensación anterior); abierto a negociar según modalidad", checklist: { ingles: "Verde", experiencia: "Rojo", typescript: "Rojo", playwright: "Rojo", iaPractica: "Rojo", validacionIA: "Rojo", agile: "Amarillo", comunicacion: "Verde" }, extraSkills: "Sistemas de gestión de calidad (ISO 9001, IATF 16949, AS9100), APQP/PPAP, Six Sigma (Green Belt), auditorías internas/externas, gestión de crisis de línea y trazabilidad de componentes, validación de test fixtures y señales de hardware — perfil fuerte para el rol alterno de Senior Hardware Test Engineer." },
+    { name: "Daniel Roger Gonzales", shortName: "Daniel Roger", yearsExperience: 5, linkedin: "https://www.linkedin.com/in/daniel-roger-bo/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001642317&submodule=Candidates", age: "35 años aproximadamente", location: "Bolivia", seniority: "L2 (5 años de experiencia)", tools: "", aiToolTags: [], languages: "", salary: "", checklist: emptyChecklist(SDET_REQUIREMENTS), extraSkills: "" },
+    { name: "Eber Daniel Figueroa Rios", shortName: "Eber Figueroa", yearsExperience: 12, linkedin: "https://www.linkedin.com/in/eber-daniel-fr/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001642421&submodule=Candidates", age: "35 años aproximadamente", location: "Jalisco", seniority: "L3 (12 años de experiencia)", tools: "", aiToolTags: [], languages: "", salary: "", checklist: emptyChecklist(SDET_REQUIREMENTS), extraSkills: "" },
+    { name: "Rubén Eduardo Gamba", shortName: "Rubén Gamba", yearsExperience: 30, yearsPlus: true, linkedin: "https://www.linkedin.com/in/rub%C3%A9n-eduardo-gamba-1579b122/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001642514&submodule=Candidates#", age: "50 años aproximadamente", location: "Argentina", seniority: "Independent QA Engineer | AI QA Strategist — 30+ años de trayectoria en QA/QC", tools: "Claude, QMetry (prompt engineering); Agentic AI: Tricentis Agentic, Reflect, Testim, BearQ, Kane AI, QMetric", aiToolTags: ["Claude", "QMetry", "Prompt engineering", "Tricentis Agentic", "Reflect", "Testim", "BearQ", "Kane AI", "QMetric"], languages: "SQL, Groovy, VB Script, Java (J2SE/J2EE), PL/SQL, HTML/XML/PHP, TypeScript", salary: "$50,000 MXN", checklist: { ingles: "Rojo", experiencia: "Verde", typescript: "Verde", playwright: "Rojo", iaPractica: "Verde", validacionIA: "Verde", agile: "Verde", comunicacion: "Verde" }, extraSkills: "Tricentis Tosca (instructor certificado), TestComplete, Katalon, testing enterprise SAP; diseño de business cases/ROI/CapEx-OpEx; 30 años de trayectoria en banca, retail, seguros y tecnología; coaching y formación de equipos QA; portugués A1." },
+    { name: "Lucero Contreras Guerrero", shortName: "Lucero Contreras", yearsExperience: 11, linkedin: "https://www.linkedin.com/in/lucerocontreras15/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001642642&submodule=Candidates", age: "32 años aproximado", location: "Queretaro", seniority: "Senior QA Engineer en SimpliRoute / Simply Road (logística), como contractor, desde feb 2026 — diseña e implementa agentes de IA autónomos (Claude Code, explorando Kimi) y flujos de QA impulsados por IA (Google ADK, Symphony) para sistemas de enrutamiento logístico. Previamente QA Lead en Digital@FEMSA (oct 2023–feb 2026) y Sr. QA Engineer también en Digital@FEMSA (abr 2021–oct 2023). Trayectoria total de +10 años en México (Arenzo, Beta, Tu Identidad, Albo, Fensa —donde lideró un equipo de 10 personas—, y Quamines).", tools: "Claude Code y Kimi (agentes autónomos); Google ADK y Symphony (orquestación de flujos de QA con IA) — agentes que generan historias en Jira a partir de notas del PM, crean escenarios en Gherkin, actualizan planes de prueba leyendo acuerdos en Slack, automatizan escenarios, revisan código para evitar exponer credenciales, y validan la seguridad/funcionalidad de los LLMs.", aiToolTags: ["Claude Code", "Kimi", "Google ADK", "Symphony"], languages: "Python (su preferido, lo usa con Playwright y en automatización general), SQL/PostgreSQL/MongoDB para validación de datos. CV también menciona \"Python básico\" e ingeniería de prompts (ChatGPT, Gemini, Midjourney, Canva) como skill aparte. No hay evidencia de TypeScript ni Java.", salary: "$72,200 MXN (equivalente calculado a partir de $4,250 USD/mes vía Deel, con una empresa chilena; incluye 30 días de aguinaldo)", checklist: { ingles: "Rojo", experiencia: "Verde", typescript: "Rojo", playwright: "Amarillo", iaPractica: "Verde", validacionIA: "Verde", agile: "Verde", comunicacion: "Verde" }, extraSkills: "ISTQB CTFL, Scrum Master Certified (SMC), Hacking Ético Web/Pentesting, fundamentos de ingeniería de requisitos, Power BI/Tableau/Snowflake, AWS/DataDog/Bizagi, OWASP Top 10/inyección SQL, liderazgo de equipos de hasta 10 personas, background como Product Owner/analista de requisitos." },
+    { name: "Eduardo Alejandro Sánchez Lugo", shortName: "Eduardo Sánchez", yearsExperience: 9, linkedin: "https://www.linkedin.com/in/eduardo-alejandro-sanchez-lugo/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001642744&submodule=Candidates", age: "30 años aproximado", location: "Estado de Mexico", seniority: "L3 (9 años de experiencia)", tools: "", aiToolTags: [], languages: "", salary: "", checklist: { ingles: "Amarillo", experiencia: "", typescript: "", playwright: "", iaPractica: "", validacionIA: "", agile: "", comunicacion: "" }, extraSkills: "" },
+    { name: "Omar Solis", shortName: "Omar Solis", yearsExperience: 12, linkedin: "https://www.linkedin.com/in/omar-solis-escobar/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001633001&submodule=Candidates", age: "35 años aproximado", location: "Ciudad de México", seniority: "QA Senior — Teradata México (infraestructura de IA/BI)", tools: "Copilot; LLMs locales (Ollama, Llama.cpp); prompt engineering", aiToolTags: ["Copilot", "Ollama", "Llama.cpp", "Prompt engineering"], languages: "Python, PowerShell", salary: "$75,000 MXN", checklist: { ingles: "Verde", experiencia: "", typescript: "", playwright: "", iaPractica: "Verde", validacionIA: "Verde", agile: "", comunicacion: "Verde" }, extraSkills: "Jenkins, Ansible, Postman, Docker (infraestructura CI/CD); validación de seguridad de IA mediante revisión de GitHub Actions y logs; esquema de contratista (facturación vía Resico)." },
+    { name: "Lilia Carolina Tapia Ledesma", shortName: "Carolina Tapia", yearsExperience: 6, yearsApprox: true, linkedin: "https://www.linkedin.com/in/lilia-carolina-tapia-ledesma-6a6441189/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001653190&submodule=Candidates", age: "28 años", location: "Mazatlán", seniority: "QA Automation Engineer / SDET — Deloitte Consulting (cliente Square), ago 2023–jul 2026. Nota: esta llamada fue principalmente para una vacante de Manual Tester (contrato de 2 meses); se le identificó como prospecto para transición a Automation SDET (IA) a futuro.", tools: "Claude Code + prompt engineering (conversión de casos manuales de TestRail a scripts automatizados; revisión de automatización generada por IA antes de fusionar vía Buildkite). Certificación: Claude Code in Action — Anthropic Academy.", aiToolTags: ["Claude Code", "Prompt engineering"], languages: "Selenium con Python, SQL", salary: "$28,000 MXN", checklist: { ingles: "Verde", experiencia: "Verde", typescript: "", playwright: "", iaPractica: "Verde", validacionIA: "Verde", agile: "Verde", comunicacion: "Verde" }, extraSkills: "TestRail, Jira, Linear, GitHub, Buildkite (CI/CD), Android Studio, Xcode, Postman; testing de hardware integrado (wearables, POS); ISTQB Foundation Level y Advanced Level Test Analyst; multiplataforma (macOS/Linux/Windows)." },
+    { name: "Tony Briceño P.", shortName: "Tony Briceño", yearsExperience: 10, linkedin: "https://www.linkedin.com/in/tonybp18/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001659458&submodule=Candidates", age: "36 años aproximado", location: "Venezuela", seniority: "Sr. QA Automation (Contractor) — proyecto de streaming OTT (Android CTV/Mobile), ago 2022–presente; también profesor universitario en la UCV. Actualmente colabora en paralelo en un microproyecto con Salesforce (automatización en Ruby).", tools: "IA generativa de uso consultivo (no copia/pega) para generar expresiones regulares y scripts de integración previos a SonarQube, con revisión y control de versiones manual; Microsoft Copilot para checklists y seguimiento de cambios de código generado.", aiToolTags: ["Copilot"], languages: "Java (su preferido), TypeScript (con Playwright, ~2 años), Ruby (proyecto reciente); históricamente también C#, Groovy, PHP, JavaScript.", salary: "$50,000 MXN (equivalente calculado a partir de $3,000 USD/mes, mínimo declarado como proyecto externo)", checklist: { ingles: "Verde", experiencia: "Verde", typescript: "Verde", playwright: "Amarillo", iaPractica: "Amarillo", validacionIA: "Verde", agile: "Verde", comunicacion: "Verde" }, extraSkills: "Profesor universitario (UCV, +10 años acumulados en distintos periodos); certificación ISTQB® Foundation Level; desarrollo móvil (Android, Oracle MAF); background en C#/Acumatica, Groovy/Spock, REST Assured, JMeter; alemán básico (A1.2); interés en testing de performance, seguridad, IA y gaming; disponible para proyectos externos cortos en paralelo a su proyecto actual." },
+    { name: "Juan Jonas Torres Beltrán", shortName: "Jonas Torres", yearsExperience: 7, linkedin: "https://www.linkedin.com/in/juan-jonas-torres-beltran-1861b7188/", zoho: "https://recruit.zoho.com/recruit/org910839933/EntityInfo.do?module=Candidates&id=844027000001659635&submodule=Candidates", age: "30 años aproximado", location: "Mazatlán", seniority: "Test Engineer (SDET) en Deloitte Consulting / Dextra by Deloitte, Guadalajara, feb 2022–jul 2026, con clientes Square/Block (fintech, 2 años 10 meses) y Google/Fitbit (wearables, 1 año 1 mes). Antes QA Engineer en PINSA (2020–2022) y Firmware Test Intern en SINNO Design (2019–2020). La vacante a la que aplicó por LinkedIn ya está cerrada — se mantiene en banca de talento; disponible de tiempo completo.", tools: "Trailblaze (dashboard interno de automatización integrado con TestRail, que usa IA + comandos en lenguaje natural) en el proyecto Square; un asistente interno llamado \"Gus\" con contexto del proyecto; usó Selenium en Python con apoyo de IA para automatizar flujos web de comercio minorista (creación de artículos, asignación de precios), con un ciclo de retroalimentación IA-usuario para optimizar tiempos y evitar prácticas no recomendadas (como usar coordenadas de pantalla en vez de selección por elemento).", aiToolTags: ["Trailblaze", "Gus"], languages: "Python (usado con Selenium/JetBrains), SQL (fundamentos) — \"actualmente construyendo\": Selenium, Playwright, lógica de programación en Python/Java básico. Explícitamente NO tiene experiencia con TypeScript (usó Trailblaze en lenguaje natural, no TypeScript directo).", salary: "$36,000 MXN brutos (último salario; usado como referencia de expectativa)", checklist: { ingles: "Verde", experiencia: "Amarillo", typescript: "Rojo", playwright: "Rojo", iaPractica: "Verde", validacionIA: "Verde", agile: "Verde", comunicacion: "Verde" }, extraSkills: "Ingeniería en Mecatrónica (no Ciencias de la Computación); experiencia en testing de hardware/firmware (ensamblaje de PCB, microcontroladores embebidos, sistemas de control de acceso en Raspberry Pi); Oracle E-Business Suite (procurement/inventario); Figma, Notion, JIRA, GitHub, Jenkins, Linear; manejo de STLC y ciclo de vida de defectos; testing de wearables (Fitbit)." },
+    { name: "Juan Manuel Perez Garate", shortName: "Juan Manuel Perez", yearsExperience: 8, linkedin: "", zoho: "", age: "", location: "", seniority: "Automation QA Engineer con experiencia en proyectos de e-commerce y fintech; contactado previamente y con llamada de discovery ya registrada en Zoho Recruit. Historial laboral detallado en su CV (roles como QA Automation / SDET en distintas empresas del sector tecnológico).", tools: "Automatización de pruebas end-to-end y de API; frameworks basados en Selenium/Playwright según lo reportado en Zoho; integración con pipelines de CI/CD.", aiToolTags: [], languages: "JavaScript/TypeScript y Python reportados en CV y Zoho; SQL para validación de datos.", salary: "$105,000 MXN (según Zoho, campo 'Current Salary') — nota: este monto es notablemente más alto que el resto de candidatos SDET registrados; pendiente confirmar con Carito si es correcto, mensual, bruto y en MXN.", checklist: { ingles: "Verde", experiencia: "Verde", typescript: "Verde", playwright: "Verde", iaPractica: "Amarillo", validacionIA: "Amarillo", agile: "Verde", comunicacion: "Verde" }, extraSkills: "LinkedIn no confirmado: no se pudo leer de forma confiable la URL en la captura de Zoho ni en el CV (el CV solo muestra la palabra \"LinkedIn\" como hipervínculo sin exponer la URL en el texto extraído); pendiente que Carito comparta el enlace exacto si desea agregarlo." },
+    { name: "Daniel Castrejón", shortName: "Daniel Castrejón", yearsExperience: 19, linkedin: "", zoho: "", age: "", location: "", seniority: "Según Zoho Recruit, 19 años de experiencia total registrados en el sistema. Su propio CV desglosa la trayectoria de forma distinta: 11 años de experiencia en QA Testing, de los cuales 7 años como QA Automation Engineer y 6 años como programador Java (los periodos se traslapan). Se usa la cifra de Zoho (19) como referencia operativa consistente con el resto del pipeline; pendiente confirmar con Carito cuál lectura prefiere.", tools: "QA Automation Engineer con base sólida en programación Java; experiencia en testing funcional y de automatización según CV y notas de Zoho.", aiToolTags: [], languages: "Java (6 años como programador), con aplicación directa en frameworks de automatización.", salary: "$60,000 MXN (según Zoho)", checklist: { ingles: "Verde", experiencia: "Verde", typescript: "Amarillo", playwright: "Amarillo", iaPractica: "Amarillo", validacionIA: "Amarillo", agile: "Verde", comunicacion: "Verde" }, extraSkills: "Persona con la que Carito ya había hablado anteriormente; información nutrida combinando CV y captura de Zoho Recruit." },
+    { name: "David Mora Barreto", shortName: "David Mora Barreto", yearsExperience: 19, linkedin: "", zoho: "", age: "", location: "", seniority: "Según Zoho Recruit, 19 años de experiencia total registrados en el sistema. Su propio CV describe \"más de 15 años\" de experiencia. Se usa la cifra de Zoho (19) como referencia operativa consistente con el resto del pipeline; pendiente confirmar con Carito cuál lectura prefiere.", tools: "Perfil senior de QA; según las notas de la llamada de discovery en Zoho, se encuentra \"actualmente aprendiendo tecnologías modernas de automatización web, incluyendo herramientas de testing con IA y Playwright\" — es decir, son habilidades en desarrollo, no experiencia ya establecida.", aiToolTags: [], languages: "Trayectoria extensa en QA; Playwright y herramientas de IA para testing están en fase de aprendizaje activo según Zoho, señal positiva a futuro aunque aún no consolidada.", salary: "$60,000 MXN (según Zoho)", checklist: { ingles: "Verde", experiencia: "Verde", typescript: "Amarillo", playwright: "Rojo", iaPractica: "Amarillo", validacionIA: "Amarillo", agile: "Verde", comunicacion: "Verde" }, extraSkills: "Nota importante: Playwright e IA marcados de forma conservadora (Rojo/Amarillo) porque, según sus propias notas de discovery call, está en proceso de aprendizaje activo de estas herramientas, no con experiencia ya consolidada — se destaca como señal positiva a futuro." },
+    { name: "Kevin De Gracia", shortName: "Kevin De Gracia", yearsExperience: 2, linkedin: "", zoho: "", age: "", location: "", seniority: "2 años de experiencia profesional — por debajo del mínimo de 6+ años que pide la JD de SDET. Zoho Recruit incluye una nota de la llamada de discovery que señala que \"su compromiso con la auto-mejora técnica dentro de un entorno corporativo parece bajo, según retroalimentación de su rol anterior\" — se relaya esta observación de forma honesta tal como está registrada.", tools: "A pesar de la nota de Zoho sobre su nivel general, sus proyectos personales en GitHub muestran mayor profundidad técnica de la que sugiere la etiqueta general de Zoho (\"TypeScript (Initial)\"): frameworks propios con Playwright + TypeScript y Page Object Model (POM).", aiToolTags: [], languages: "TypeScript (nivel inicial según Zoho, aunque sus proyectos personales muestran mayor manejo práctico); Playwright en proyectos propios con arquitectura POM.", salary: "$21,400 MXN (según Zoho)", checklist: { ingles: "Amarillo", experiencia: "Rojo", typescript: "Amarillo", playwright: "Amarillo", iaPractica: "Rojo", validacionIA: "Rojo", agile: "Amarillo", comunicacion: "Amarillo" }, extraSkills: "Fit general débil para esta vacante dado el requisito de 6+ años de experiencia (tiene 2). Se incluye la nota textual de Zoho sobre su compromiso de auto-mejora para que Carito tenga el contexto completo, junto con la señal más alentadora de sus proyectos personales en GitHub." }
+  ];
+
+  var SDET_COMPANIES = [
+    { company: "Tech Holding", title: "Senior SDET - Test Automation & Performance Engineering", platform: "Greenhouse", location: "Remoto (México)", salary: "No revelado", requirements: "Contrato; testing de API/servicios distribuidos y cloud (AWS); performance (k6/Gatling/Locust/JMeter); integración CI/CD; gestión de datos de prueba", url: "https://job-boards.greenhouse.io/techholding/jobs/4730457005", dateChecked: "14/09/2026", notes: "Vacante activa al momento de la consulta; salario no revelado en el anuncio." },
+    { company: "DaCodes", title: "QA Automation (Python, Cypress/Playwright) - English Required - Only México", platform: "BuiltIn", location: "Remoto (Cd. de México)", salary: "No revelado", requirements: "3+ años como QA Engineer o SDET; Python, TypeScript, SQL; Cypress/Playwright, Pytest; inglés C1", url: "https://builtin.com/job/qa-automation-python-cypress-playwright-english-required-only-m-xico/7844993", dateChecked: "14/09/2026", notes: "Anuncio marcado como cerrado/removido el 30/12/2025 según BuiltIn; se incluye solo como referencia de requisitos de mercado." },
+    { company: "N/A (dato agregado, no es una vacante específica)", title: "Promedio salarial reportado - SDET", platform: "Payscale (dato agregado)", location: "México (agregado nacional)", salary: "Promedio $739,821 MXN/año (~$61,652 MXN/mes); rango $381,000-$771,000 MXN/año", requirements: "N/A (dato salarial agregado, no lista requisitos)", url: "https://www.payscale.com/research/MX/Job=Software_Development_Engineer%2C_Test_(SDET)/Salary", dateChecked: "14/09/2026", notes: "Muestra de solo 3 respuestas de encuesta - baja confiabilidad estadística. Dato actualizado 01/05/2025." }
+  ];
+
+  var HARDWARE_COMPANIES = [
+    { company: "Flex", title: "Test Engineer", platform: "BuiltIn", location: "Guadalajara, Jalisco (presencial, North Campus)", salary: "No revelado", requirements: "Electrónica de potencia y sistemas trifásicos; programación (Python/JavaScript/PHP/HTML/C#) para automatización de pruebas; liderazgo de técnicos; inglés y español fluido; contacto con cliente", url: "https://builtin.com/job/test-engineer/9604055", dateChecked: "14/09/2026", notes: "Anuncio removido el 10/07/2026 según BuiltIn; no menciona explícitamente NPI/EVT-DVT-PVT ni viajes a China - se incluye como comparable de mercado en Guadalajara, no como match exacto del rol." },
+    { company: "N/A (dato agregado)", title: "Sueldo reportado - Test Engineer, Guadalajara", platform: "Glassdoor (dato agregado)", location: "Guadalajara, Jalisco", salary: "Rango reportado $19,000-$38,000 MXN/mes (sueldo base)", requirements: "N/A (dato salarial agregado, no lista requisitos)", url: "https://www.glassdoor.com/Salaries/guadalajara-mexico-test-engineer-salary-SRCH_IL.0,18_IM3087_KO19,32.htm", dateChecked: "14/09/2026", notes: "Página fechada 2026 pero sin fecha específica de actualización ni tamaño de muestra reportado." }
+  ];
+
+  var BDR_COMPANIES = [
+    { company: "OneSeven Tech", title: "Business Development Representative - Outbound Sales, B2B SaaS", platform: "Remotive", location: "Remoto (Argentina / LatAm)", salary: "$2,500-$4,000 USD/mes (base + bono), pago vía Deel", requirements: "3+ años en rol de ventas/SDR/BDR o cara al cliente; inglés fluido; enfoque outbound (correo frío, LinkedIn, llamadas); CRM (Pipedrive); herramientas de correo en frío (Instantly, Apollo, Lemlist)", url: "https://remotive.com/remote/jobs/sales-business/business-development-representative-outbound-sales-b2b-saas-4172410", dateChecked: "14/09/2026", notes: "Vacante 100% remota abierta a LatAm (compañía con sede en Argentina); buen comparable de perfil aunque no específicamente México." },
+    { company: "Remote", title: "Outbound Business Development Representative", platform: "Sitio de la empresa (careers)", location: "Remoto (región AMER)", salary: "OTE $31,500-$88,700 USD/año (salario base ~70% del total)", requirements: "Experiencia previa como SDR en B2B SaaS; inglés fluido; outbound (llamadas en frío, prospección); Salesforce, LinkedIn Sales Navigator, ZoomInfo (deseable)", url: "https://remote.com/openings/6349430003", dateChecked: "14/09/2026", notes: "El anuncio indica que el salario final depende de ubicación, experiencia y otros factores." },
+    { company: "No especificado en el anuncio", title: "Business Development - SaaS", platform: "Michael Page", location: "Ciudad de México", salary: "$27,000-$30,000 MXN/mes ($324,000-$360,000 MXN/año)", requirements: "Experiencia en prospección outbound; sector tecnología/SaaS; enfoque en resultados comerciales; contrato permanente", url: "https://www.michaelpage.com.mx/jobs/business-development/m%C3%A9xico", dateChecked: "14/09/2026", notes: "Único anuncio del listado de Michael Page etiquetado explícitamente como Business Development (outbound); menciona trabajo con clientes internacionales." }
+  ];
+
+  var JD_CONFIGS = {
+    sdet: {
+      id: 'sdet',
+      tabLabel: { es: "SDET (IA)", en: "SDET (AI)" },
+      title: { es: "Senior Automation SDET (IA) — Outpost QA", en: "Senior Automation SDET (AI) — Outpost QA" },
+      subtitle: { es: "Seguimiento del proyecto: definición del rol + investigación de mercado con perfiles de LinkedIn", en: "Project tracker: role definition + market research with LinkedIn profiles" },
+      hasSeniorityLevels: true,
+      seniorityLevels: SDET_SENIORITY_LEVELS,
+      seniorityLabel: { es: "Nivel de seniority (L1–L3 según años de experiencia)", en: "Seniority level (L1–L3 by years of experience)" },
+      currentStepIndex: 0,
+      requirements: SDET_REQUIREMENTS,
+      overview: {
+        title: { es: "Evolución de la Job Description", en: "Job Description evolution" },
+        hint: { es: "Cómo empezó este puesto (JDs de Automation SDET existentes, sin IA como eje) vs. cómo va quedando la nueva versión", en: "How this role started (existing Automation SDET JDs, without AI as the focus) vs. how the new version is shaping up" },
+        cardA: {
+          tag: { es: "Punto de partida", en: "Starting point" },
+          bullets: [
+            { es: "Dos JDs existentes de \"Senior Automation SDET\", con responsabilidades genéricas de automatización (Playwright/TypeScript).", en: "Two existing \"Senior Automation SDET\" JDs, with generic automation responsibilities (Playwright/TypeScript)." },
+            { es: "La IA aparecía solo como una herramienta más dentro de la lista de responsabilidades (ej. \"usar Claude o Stagehand para generar tests\"), no como el eje del puesto.", en: "AI only appeared as one more tool within the list of responsibilities (e.g. \"use Claude or Stagehand to generate tests\"), not as the focus of the role." },
+            { es: "Sin datos de mercado sobre qué tan extendido está el uso de IA en automatización entre perfiles mexicanos, ni de rangos salariales asociados.", en: "No market data yet on how widespread AI use in automation is among Mexican profiles, or the associated salary ranges." }
+          ],
+          detailsSummary: { es: "Ver resumen introductorio original", en: "View original intro summary" },
+          fullText: { es: "\"As a Senior Automation SDET at Outpost QA, you will own the test automation and quality efforts for entire product areas or major features. You will architect and optimize automation frameworks, lead test strategy for complex systems, and regularly collaborate across teams to deliver reliable and high-quality releases. This role offers the opportunity to mentor others, drive cross-functional quality improvements, and play a critical part in shaping the future of our engineering excellence.\" (cita textual, en inglés original)", en: "\"As a Senior Automation SDET at Outpost QA, you will own the test automation and quality efforts for entire product areas or major features. You will architect and optimize automation frameworks, lead test strategy for complex systems, and regularly collaborate across teams to deliver reliable and high-quality releases. This role offers the opportunity to mentor others, drive cross-functional quality improvements, and play a critical part in shaping the future of our engineering excellence.\" (verbatim quote, original English)" }
+        },
+        cardB: {
+          tag: { es: "Versión actual (borrador)", en: "Current version (draft)" },
+          bullets: [
+            { es: "Nuevo resumen del rol con la IA como parte central de cómo se trabaja, no como una tarea adicional.", en: "New role summary with AI as a core part of how the work gets done, not as an extra task." },
+            { es: "Responsabilidades reescritas: generación y validación de código de prueba con IA, automatizaciones \"self-healing\", prompt engineering aplicado a testing, evaluación continua de nuevas herramientas de IA.", en: "Responsibilities rewritten: AI-assisted test code generation and validation, self-healing automations, prompt engineering applied to testing, ongoing evaluation of new AI tools." },
+            { es: "Requisitos ajustados: se mantienen los años de experiencia y nivel de inglés de las JDs anteriores; se añaden requisitos específicos de experiencia práctica con herramientas de IA.", en: "Requirements adjusted: years of experience and English level carried over from the previous JDs; specific requirements added for hands-on experience with AI tools." },
+            { es: "Pendiente de validar con el mercado: qué tan estrictos deben ser los requisitos de IA y qué rango salarial es realista en México.", en: "Still to validate with the market: how strict the AI requirements should be and what salary range is realistic in Mexico." }
+          ],
+          detailsSummary: { es: "Ver resumen introductorio propuesto", en: "View proposed intro summary" },
+          fullText: { es: "\"Como Senior Automation SDET (IA) en Outpost QA, serás dueño de la automatización y calidad de áreas completas del producto, con la IA como parte central de cómo trabajas — no como una herramienta adicional. Arquitecturarás frameworks de automatización que combinen herramientas tradicionales con agentes y librerías impulsadas por IA, definirás la estrategia de pruebas para sistemas complejos, y decidirás continuamente qué tareas puede asumir la IA de forma confiable y cuáles requieren criterio humano. Este rol también implica mentorear al equipo en prácticas de testing asistido por IA y ayudar a definir cómo se ve la ingeniería de calidad 'AI-native' en Outpost QA.\"", en: "\"As a Senior Automation SDET (AI) at Outpost QA, you will own automation and quality efforts across entire product areas, with AI at the core of how you work — not as an add-on tool. You will architect automation frameworks that combine traditional tooling with AI-driven agents and libraries, define test strategy for complex systems, and continuously decide which tasks AI can reliably take on versus which require human judgment. This role also involves mentoring the team on AI-assisted testing practices and helping define what AI-native quality engineering looks like at Outpost QA.\"" }
+        }
+      },
+      candidates: SDET_CANDIDATES,
+      companies: SDET_COMPANIES
+    },
+    hardware: {
+      id: 'hardware',
+      tabLabel: { es: "Hardware Test Engineer", en: "Hardware Test Engineer" },
+      title: { es: "Senior Hardware Test Engineer / NPI Test Lead — Outpost QA", en: "Senior Hardware Test Engineer / NPI Test Lead — Outpost QA" },
+      subtitle: { es: "Seguimiento del proyecto: nueva práctica de test de hardware NPI, con sede en Guadalajara y despliegues rotativos a manufactureras (CM) en China", en: "Project tracker: new NPI hardware-test practice, based in Guadalajara with rotational deployments to contract manufacturers in China" },
+      hasSeniorityLevels: false,
+      seniorityLevels: [],
+      seniorityLabel: { es: "Rango de años de experiencia", en: "Years of experience range" },
+      currentStepIndex: 0,
+      requirements: HARDWARE_REQUIREMENTS,
+      overview: {
+        title: { es: "Resumen de la vacante", en: "Role summary" },
+        hint: { es: "Extraído directamente de la JD compartida por el equipo de Outpost", en: "Drawn directly from the JD shared by the Outpost team" },
+        cardA: {
+          tag: { es: "Sobre el rol", en: "About the role" },
+          bullets: [
+            { es: "Vacante fundacional (founding hire) para una nueva práctica de test de hardware NPI en Outpost; sería el ancla técnica que lidera a los ingenieros junior.", en: "Founding hire for a new NPI hardware-test practice at Outpost; would be the technical anchor leading junior engineers." },
+            { es: "Con base en Guadalajara, con despliegues rotativos a manufactureras (CM) en China — típicamente varias semanas en sitio por fase de build, con tiempo en casa entre rotaciones (no es reubicación permanente).", en: "Based in Guadalajara, with rotational deployments to contract-manufacturer (CM) factories in China — typically several weeks on-site per build phase, with time home between rotations (not permanent relocation)." },
+            { es: "Dueño de la estrategia y ejecución de pruebas a través de EVT → DVT → PVT: construcción y validación de test fixtures, failure analysis, y protección del yield en la línea.", en: "Owns test strategy and execution across EVT → DVT → PVT: building/validating test fixtures, failure analysis, and protecting yield on the line." }
+          ],
+          detailsSummary: { es: "Ver descripción completa de responsabilidades", en: "View full responsibilities description" },
+          fullText: { es: "\"Dueño de la estrategia y ejecución de pruebas EVT→DVT→PVT para los programas de hardware de los clientes. Construye, pone en marcha y valida test fixtures; asegura que la cobertura de pruebas funcionales/in-circuit/end-of-line sea correcta y estable. Lidera el failure analysis en línea — root-cause de defectos, acciones correctivas, protección del yield. Monitorea y mejora el yield; lleva los datos y las juntas que mantienen un ramp en curso. Trabaja codo a codo con los ingenieros mecánicos y eléctricos del cliente y con el equipo de test/calidad del CM. Impulsa la transferencia de conocimiento para que el equipo interno de la fábrica pueda quedarse con el control de calidad. Mentorea y lidera técnicamente a ingenieros de prueba junior desplegados bajo su cargo.\" (traducción/paráfrasis de la sección \"What you'll do\" de la JD)", en: "\"Own the test strategy and execution across EVT → DVT → PVT for client hardware programs. Build, bring up, and validate test fixtures; ensure functional/in-circuit/end-of-line test coverage is right and stable. Lead failure analysis on the line — root-cause defects, drive corrective actions, protect yield. Monitor and improve yield; run the data and the meetings that keep a ramp on track. Work shoulder-to-shoulder with the client's mechanical and electrical engineers and the CM's test/quality team. Drive knowledge transfer so the factory's internal team can own QC. Mentor and technically lead junior test engineers deployed under you.\" (from the JD's \"What you'll do\" section)" }
+        },
+        cardB: {
+          tag: { es: "Requisitos", en: "Requirements" },
+          bullets: [
+            { es: "Experiencia sustancial en ingeniería de pruebas de manufactura/NPI, con múltiples ramps completos EVT→DVT→PVT en manufactureras (CM); hands-on con diseño/bring-up de test fixtures y pruebas funcionales, ICT y/o end-of-line.", en: "Substantial NPI/manufacturing test engineering experience, with multiple full EVT→DVT→PVT ramps run at contract manufacturers; hands-on with test fixture design/bring-up and functional, ICT, and/or end-of-line test." },
+            { es: "Experiencia directa trabajando en o con manufactureras chinas (o CMs comparables en el extranjero); inglés profesional de cara al cliente; disponibilidad y elegibilidad para viajar internacionalmente de forma rotativa (pasaporte vigente, visa de negocios a China).", en: "Direct experience working in or with Chinese contract manufacturers (or comparable overseas CMs); professional, client-facing English; eligible and willing to travel internationally on a rotational basis (valid passport, able to obtain China business visas)." },
+            { es: "Deseable: background en robótica/hardware conectado, habilidad de programación/scripting (Python, LabVIEW/TestStand) — señalado en la JD como el \"extra\" más valioso —, experiencia en Design-for-Test, liderazgo de equipo, y español y/o mandarín.", en: "Nice-to-have: robotics/connected-hardware background, coding/scripting ability (Python, LabVIEW/TestStand) — flagged in the JD as the single most valuable \"extra\" —, Design-for-Test experience, team-lead experience, and Spanish and/or Mandarin." }
+          ]
+        }
+      },
+      candidates: [
+        { name: "Paul Sahagún Landa", shortName: "Paul Sahagún", yearsExperience: 10, yearsPlus: true, linkedin: "https://www.linkedin.com/in/paul-sahagun", zoho: "", age: "", location: "Guadalajara, Jalisco", seniority: "Principal Manufacturing Test Engineer en Magic Leap (Guadalajara), desde jul 2018 — promovido de Senior Test Engineer → Test Lead → Principal Manufacturing Test Engineer. En los últimos 2 años lidera desarrollo de test NPI para productos sin baseline previo, definiendo cobertura de pruebas y límites estadísticos (3-sigma) desde cero; mejoró el tiempo de ciclo de manufactura hasta 20% y diseña/construye interfaces de PCB personalizadas in-house (2 semanas vs. 2-3 meses tercerizado). Previamente Reliability/Test Senior Engineer en Viavi Solutions (2014–2018, Guadalajara), en servidores/storage empresarial y validación de redes ópticas. Llamada de descubrimiento realizada el 10/09/2026: al momento de la llamada la vacante era muy abierta, sin cliente/producto/fecha de arranque definidos por acuerdos de confidencialidad (NDA); él mismo señaló que el rol, tal como se describió, suena más a un puesto de manager/lead de un equipo nuevo que a desarrollo técnico directo, y aclaró que prefiere enfocarse en crecimiento técnico antes que en gestión de personas, aunque sí ha liderado técnicamente a ingenieros y técnicos de los CMs sin reportarle directamente.", tools: "", aiToolTags: [], languages: "Python, C#, C/C++, AutoIt, OpenCV, CVI", salary: "$120,000 MXN mensuales brutos + bono anual del 15% según performance (salario actual en Magic Leap); lo estableció en la llamada como el mínimo requerido para considerar una oferta, más prestaciones legales y superiores (PTU, aguinaldo, vacaciones, seguro de gastos médicos).", checklist: { ingles: "Verde", experienciaNPI: "Verde", fixtures: "Verde", yieldFA: "Verde", cmChina: "Verde", viajes: "Verde", codingScripting: "Verde", roboticsBackground: "Amarillo" }, extraSkills: "KiCad, diseño de PCB rígido/flex e interposer, Fusion 360, impresión 3D, Raspberry Pi, Arduino; instrumentación Keysight/Agilent, VIAVI SmartClass 4800, VIAVI OLS-85, Anritsu RF; NI TestStand, herramientas de test Qualcomm; JTAG, Boundary Scan, Wi-Fi/Bluetooth/RF; validación SAS/RAID/JBOD de storage, redes 1GbE/10GbE; Oracle Agile (ECOs/MCOs/BOM); Ingeniería en Comunicaciones y Electrónica, Universidad de Guadalajara (2009–2014). Nota: llamada de descubrimiento ya realizada (10/09/2026), incluyendo evaluación técnica en inglés (respondió con detalle sobre troubleshooting de fallas de RF/Bluetooth/Wi-Fi en producción); confirmó disponibilidad total para viajar y visa vigente a China (múltiples entradas, 6 meses)." },
+        { name: "Leonardo Díaz Castañeda", shortName: "Leonardo Díaz", yearsExperience: 15, yearsPlus: true, linkedin: "", zoho: "", age: "", location: "Zapopan, Jalisco", seniority: "Test Engineer III en Flex North Campus (ago 2020–jun 2025) — lideró NPI para múltiples líneas de producto de Google (Viztruck, Stellaris, Zoid-2, SB-400, Neutron) y la migración de proyectos de alto impacto (Quantum I6K, Margarita) entre plantas; implementó Small Group Activities (SGA) para mejora continua. Reconocido con el Global Extraordinary Award 2024 de Flex. Previamente Test Engineer Sr. en Sanmina (2018–2019, proyectos NOKIA FP4), Test Engineer III en Flex North Campus (2017–2018, proyectos ópticos CIENA), Automotive Test Engineer en Integrated Microelectronics/IMI (2016–2017, clientes IEE/Bosch/Delphi/Sensata), y Test Engineer I en Flex North & South (2013–2016, proyectos ópticos Alcatel-Lucent/Nokia). Más de 15 años en total en test engineering y NPI para clientes Tier-1 globales.", tools: "", aiToolTags: [], languages: "Python, C++, Minitab (básico), Power BI (básico), Excel avanzado", salary: "", checklist: emptyChecklist(HARDWARE_REQUIREMENTS), extraSkills: "Certificaciones EC0217/EC0724/EC0548/EC0076 (SEP/CONOCER) en capacitación, coaching y evaluación de competencias; inglés C1 avanzado; Lean Six Sigma, Kaizen, PDCA, FMEA, CPK; Boundary Scan/Functional/Burn-In/HI-POT/System Test/AOI/ICT/Pretest; Jira, LabVIEW, UNIX (línea de comandos); Maestría en Administración y Gestión de Calidad y Productividad (TecMilenio, curso completado) y Licenciatura en Ingeniería en Ciencias de la Comunicación y Electrónica (Universidad de Guadalajara, en trámite de título). Nota: aún no se ha agendado llamada de descubrimiento." },
+        { name: "Edgar Iván Garza Dimas", shortName: "Edgar Garza", yearsExperience: 22, yearsApprox: true, linkedin: "https://www.linkedin.com/in/edgar-iv%C3%A1n-garza-dimas-bb619416b/", zoho: "", age: "45 años", location: "Reynosa, Tamaulipas", seniority: "Quality / Continuous Improvement Engineer con 17+ años en calidad dentro de una trayectoria de 22-23 años en industria maquiladora (automotriz, electrónica y aeroespacial). Actualmente en paralelo: Customer Quality Representative en Verify Inc. (LA, California, desde feb 2026) e Internal AS9100 Auditor en CDS AQS LLC (Texas, desde abr 2026). Previamente Customer/New Product Quality Engineer en Cequent Electrical (Ford/Mazda), Quality Manager en Aleph Electrónica (Continental/ZF), Senior Quality Operation Engineer en Visteon (VW/Ford/Honda/Mazda), entre otros — con 10+ años liderando APQP/PPAP/NPI desde planeación hasta lanzamiento a producción. Mismo candidato ya registrado en la pestaña de SDET (IA), donde en la llamada se le propuso esta vacante de Hardware como alternativa mejor ajustada a su perfil.", tools: "No ha implementado IA directamente en equipos de prueba; la ha usado de forma general para mejoras de proceso, sin detalle específico de herramienta.", aiToolTags: [], languages: "Ninguno — no realiza programación directa; su rol es de validación, liderazgo y coordinación entre requerimientos del cliente y ejecución en piso (confirmado explícitamente en la llamada).", salary: "~$40,000 MXN mensuales (compensación anterior); abierto a negociar según modalidad", checklist: { ingles: "Verde", experienciaNPI: "Rojo", fixtures: "Rojo", yieldFA: "Amarillo", cmChina: "", viajes: "", codingScripting: "Rojo", roboticsBackground: "" }, extraSkills: "Sistemas de gestión de calidad (ISO 9001, IATF 16949, AS9100), APQP/PPAP/FMEA/Control Plans, Six Sigma Green Belt, auditor de proceso VDA 6.3, RCA (8D/5 Why/Ishikawa), SAP ERP, Windchill PLM; soporte a clientes OEM/Tier-1 como Boeing, Ford, Volkswagen, Honda, Mazda, Mercedes-Benz, Continental, ZF y Audi; pasaporte y visa vigentes; maestría en Relaciones Industriales. Nota: llamada de descubrimiento ya realizada (24 de agosto, 2026) — checklist evaluado con base en esa llamada; los puntos de fixtures/failure analysis muestran que su rol de calidad no incluye diseño/validación directa de test fixtures (esa función recae en mantenimiento/ingeniería según él mismo aclaró), y no tiene experiencia directa con CMs en China ni viajes rotativos internacionales — no evaluado explícitamente en la llamada." },
+        { name: "Víctor Hugo Málaga Trujillo", shortName: "Víctor Málaga", yearsExperience: 4, linkedin: "", zoho: "", age: "", location: "Guadalajara, Jalisco", seniority: "Product Engineer en Foxconn Ingrasys México (nov 2025–actualidad): administración e implementación de Engineering Change Orders (ECO), análisis de impacto técnico/económico previo a liberación de cambios, validación de BOMs, coordinación con Manufacturing Engineering/Quality/Planning/Purchasing/Supply Chain, seguimiento de NPI y gestión de cambios en SAP/Agile PLM/Oracle SFC. Previamente Técnico de Introducción de Nuevos Productos (NPI) en Sanmina México (jun 2022–nov 2025): seguimiento de proyectos NPI y corridas piloto, validación de procesos y documentación técnica. Inició como Practicante de Ingeniería en Sanmina México (dic 2021–jun 2022). Años de experiencia (4) calculados a partir de las fechas de su CV (dic 2021–actualidad); su CV no declara una cifra total de años de experiencia.", tools: "SAP, Agile PLM, Oracle SFC, Power BI, Excel avanzado — enfocado en gestión de ECOs/BOMs y dashboards de KPIs, no en diseño/bring-up de test fixtures ni en test funcional/ICT en piso.", aiToolTags: [], languages: "No se menciona explícitamente ningún lenguaje de programación o scripting en su CV; su perfil es de gestión de ingeniería de producto (ECO/BOM/NPI), no de desarrollo de pruebas automatizadas.", salary: "", checklist: emptyChecklist(HARDWARE_REQUIREMENTS), extraSkills: "Certificaciones en Project Management, Lean Six Sigma Yellow Belt, Lean Manufacturing y Accountability; Ingeniería en Procesos y Comercio Internacional (Centro Universitario de la Costa Sur, UDG, 2018–2021); inglés intermedio (B1) — por debajo del nivel de inglés profesional de cara al cliente que pide la JD. Reporta en su CV una recuperación potencial de aprox. USD $18,000 mediante análisis de impacto de materiales y el desarrollo de un dashboard ECO Aging (cifras auto-reportadas por el candidato, no verificadas por Outpost). Nota: su experiencia es más de ingeniería de producto/ECO que de test hardware (fixtures, yield, failure analysis) — posible desalineación con el enfoque de la vacante; aún no se ha agendado llamada de descubrimiento." },
+        { name: "Jose Eduardo Guzman Zamora", shortName: "Jose Eduardo Guzman", yearsExperience: 9, yearsPlus: true, linkedin: "", zoho: "", age: "", location: "Guadalajara, Jalisco", seniority: "Manufacturing / Product Engineer en Viking Enterprise Solutions (Sanmina Division), Guadalajara (sep 2021–actualidad): líder técnico en piso de manufactura para lanzamientos NPI y producción de alto volumen de hardware de centros de datos; transferencias internacionales de líneas de manufactura de México a India a través de fases EVT/DVT/Mass Production; investigaciones RCCA con DOE/PDCA/DMAIC; gestión de ECOs/MCOs y desviaciones; supervisión de un equipo de 3 ingenieros y 1 técnico. Previamente FT & Automation Engineer en Vectralis Mechanical Design (abr 2020–sep 2021) y Mechanical Design Engineer en DYCSA (nov 2016–abr 2020), con coordinación de equipos en Alemania y EE. UU. 9+ años de experiencia según su propio CV (\"9+ years of hands-on expertise\").", tools: "PCBA Manufacturing, transiciones de fase NPI (EVT/DVT/MP), DFM/DFX, balanceo de líneas, tooling y fixturing de precisión, sistemas Poka-Yoke, Statistical Process Control (SPC), Root Cause Analysis (DMAIC/PDCA/DOE), gobernanza de cambios (ECO/MCO), estructuras BOM, APQP, estándares IPC (IPC-J-STD-001, IPC-A-610). Reporta en su CV: reducción de 80% en defectos de PCBA/ensamble mecánico en un trimestre mediante tooling/fixturing propio y guías DFM, y mejora de 50% en yields de test a nivel sistema mediante PDCA/control charts (cifras auto-reportadas por el candidato, no verificadas por Outpost).", aiToolTags: [], languages: "No se menciona explícitamente un lenguaje de programación o scripting (Python/LabVIEW no aparecen en el CV); usa SolidWorks, Agile PLM, Minitab y JobBoss ERP.", salary: "", checklist: emptyChecklist(HARDWARE_REQUIREMENTS), extraSkills: "Lean Six Sigma Black Belt certificado; Certified IPC Specialist (IPC-J-STD-001 e IPC-A-610); SOLIDWORKS Professional (CSWP); Ingeniería Industrial (Universidad del Valle de México). Movilidad internacional: pasaporte vigente, visa de EE. UU. y e-visa de India (\"immediate readiness for global travel and site product transfers\") — buena señal para el requisito de viajes rotativos, aunque no menciona específicamente visa o experiencia con CMs en China. Inglés: \"Professional Working\" según su CV. Nota: aún no se ha agendado llamada de descubrimiento." },
+        { name: "César Simón García Ferman", shortName: "César García", yearsExperience: 9, yearsPlus: true, linkedin: "https://www.linkedin.com/in/cesarsimon-garciaferman", zoho: "", age: "", location: "Guadalajara, Jalisco", seniority: "NPI Leader (Technical Lead & Testing Strategy) en Sanmina, Tlajomulco de Zúñiga (ago 2025–actualidad): anchor técnico para introducción de nuevos productos, liderando estrategia de testing end-to-end (ICT, funcional, validación a nivel sistema); desarrollo y mentoría de equipo de ingenieros de producto y test; optimización de yield mediante análisis de datos de test. Previamente Sr. New Product Introduction Engineer en Plexus Corp., Zapopan (feb–ago 2025): fases EVT/DVT/PVT para sistemas de hardware de alta complejidad, liaison técnico entre R&D y manufactura. NPI Product Engineer en Flex, Zapopan (dic 2020–feb 2025): ciclo de vida de testing/validación para 100+ productos, estandarización de procesos de test con sitios globales. Product Engineer Mgmt en Sanmina, Zapopan (feb 2018–nov 2020): ingeniería de sustentamiento y test operations, ICT y testing funcional. 9+ años de experiencia según su propio CV (\"9+ years of experience\"); nota: su trayectoria laboral de tiempo completo (feb 2018–actualidad) se traslapa en el CV con estudios de Licenciatura en Desarrollo de Sistemas Web (2020–2024) — posible inconsistencia de fechas a confirmar con el candidato.", tools: "NPI Hardware Testing (EVT/DVT/PVT), estrategia de ICT y test funcional, optimización de yield y cobertura de test, root cause analysis y debugging de hardware, desarrollo y validación de test plans, anchoring técnico cross-funcional, liderazgo y mentoría de equipos de ingeniería.", aiToolTags: [], languages: "No se menciona explícitamente un lenguaje de programación o scripting pese a su formación en Desarrollo de Sistemas Web (Programación); inglés avanzado según su propio perfil.", salary: "", checklist: emptyChecklist(HARDWARE_REQUIREMENTS), extraSkills: "Certified Associate in Project Management (CAPM), PMI (esperado 2026, en curso); Google Project Management Professional Certificate, Coursera (2025); B.S. en Desarrollo de Sistemas Web/Programación, Universidad de Guadalajara (2020–2024); Senior Data Scientist Certificate, Tecnológico de Monterrey (2024). Declara estar \"fully prepared for rotational, international deployments (e.g., China)\" — coincide directamente con el requisito de viajes/CMs en China, aunque a diferencia de otros candidatos no detalla estatus de pasaporte/visa. Nota: aún no se ha agendado llamada de descubrimiento." },
+        { name: "Jorge Antonio Gómez Sánchez", shortName: "Jorge Gómez", yearsExperience: 7, linkedin: "https://www.linkedin.com/in/jorge-antonio-gómez-32b2511a3", zoho: "", age: "", location: "Zapopan, Jalisco (originario de Mazatlán)", seniority: "Experto Técnico de Mantenimiento en Laboratorios PiSA (jul 2025–actualidad): responsable técnico de desarrollo/mantenimiento de software embebido en C para equipos médicos, coordinación técnica de 2 ingenieros mecatrónicos, y participación en interpretación de requerimientos IEC 60601/IEC 62304. Previamente en PiSA: Especialista de Diseño y Desarrollo de Producto (mar 2023–jul 2025) — lideró un proyecto de Introducción de Nuevo Producto (NPI/INP) de un equipo de diálisis peritoneal con inversión aproximada de $76 millones MXN y alcance de fabricación de 2,000 equipos; Líder de Diseño y Desarrollo de Productos (ene 2022–mar 2023); Técnico Mecatrónico (nov 2020–ene 2022); Técnico de Electrónica (jun–nov 2020). Antes, Técnico/Coordinador de Diagnóstico en Sanmina (ago 2019–jun 2020), coordinando hasta 21 técnicos de diagnóstico y reparación en manufactura electrónica. En la llamada explicó que actualmente encabeza la toma de decisiones técnicas junto con su equipo, previa validación y visto bueno de la gerencia (no de forma completamente autónoma).", tools: "MPLAB X, microcontroladores, debugging, análisis de circuitos, diagnóstico electrónico y revisión de PCB; SOLIDWORKS (modelado 3D, ensambles, renders técnicos).", aiToolTags: [], languages: "Software embebido en C para equipos médicos. En la llamada aclaró explícitamente que no desarrolla scripts de prueba (Python u otros) para automatización de testing — su experiencia de scripting es de liberación/mantenimiento de software embebido, no de test automation.", salary: "$4,700 al mes, bruto, según indicó en la llamada (moneda no especificada explícitamente en la transcripción; por el contexto de la llamada muy probablemente MXN — pendiente confirmar con el candidato).", checklist: { ingles: "Amarillo", experienciaNPI: "Verde", fixtures: "Rojo", yieldFA: "Verde", cmChina: "", viajes: "Amarillo", codingScripting: "Rojo", roboticsBackground: "Amarillo" }, extraSkills: "Six Sigma Green Belt certificado por SigmaPro (2023); Maestría en Administración de Negocios con especialidad en Calidad y Productividad (Universidad Tecmilenio, 2022–2023); Ingeniería en Mecatrónica (Universidad Politécnica de Sinaloa, 2016–2019); conocimiento normativo de dispositivos médicos (IEC 60601-1, IEC 60601-1-2, IEC 60601-2-39, IEC 62304, ISO 13485, NOM 241); Microsoft Project. Nota: llamada de descubrimiento realizada el 15/09/2026; nivel de inglés evaluado por Carolina como B1 cercano a B2, con la observación de que el puesto (pensado para un rol gerencial con viajes a China) probablemente requiera C1; no mencionó experiencia con manufactureras (CM) en China; sí mencionó experiencia dando capacitación en El Salvador. Entrevista técnica en inglés pendiente de agendar con el jefe (nacionalidad estadounidense)." },
+        { name: "Daniel Plascencia", shortName: "Daniel Plascencia", yearsExperience: 9, yearsApprox: true, linkedin: "https://www.linkedin.com/in/daniel-plascencia-valadez", zoho: "", age: "", location: "", seniority: "Quality Engineering Team Leader en Foxconn (may 2025–actualidad): supervisión de aseguramiento de calidad end-to-end, liderazgo de iniciativas de mejora continua, desarrollo/monitoreo de KPIs, colaboración en APQP, punto focal de Quality Engineering para Introducciones de Nuevo Producto (NPI) del producto DS8K, auditor líder interno de ISO 9001, liderazgo de 6 ingenieros de calidad en 7 líneas de manufactura. Previamente Quality Engineering Team Leader and Pre-stop/Stop Ship Coordinator en IBM (ago 2023–may 2025) para el producto DS8K, y Quality Engineer en IBM (feb 2017–ago 2023). Sin llamada de descubrimiento realizada todavía — perfil basado únicamente en su CV.", tools: "Herramientas de calidad: 8D, FMEA, SPC, CAPA, Control Plans; análisis de causa raíz (Ishikawa, 5W2H); Lean Six Sigma; auditorías ISO 9001.", aiToolTags: [], languages: "No se menciona ningún lenguaje de programación/scripting en su CV — su perfil es de ingeniería de calidad/manufactura, no de desarrollo de pruebas automatizadas.", salary: "", checklist: emptyChecklist(HARDWARE_REQUIREMENTS), extraSkills: "Ingeniería Industrial, Universidad de Guadalajara (2012–2016, graduado con honores); inglés avanzado, español nativo. Reconocimientos reportados en su CV (autoreportados por el candidato, no verificados por Outpost): IBM Innovation Projects winner 2024 (proyecto \"DS8K Task Force - CEC Manufacturing Process\", que según su CV redujo el tiempo de proceso por unidad de 4.72 a 1.98 horas); IBM Excellence Award 2023 (transferencia de manufactura DS8K de IBM Vác a IBM GDL, que según su CV aseguró más de $138 millones de dólares de ingresos para el 4to trimestre de 2023); IBM Excellence Award 2022; IBM Quarterly Cash Award 2021 (proyecto de inspección automatizada de seguros para el producto Anaconda); IBM Excellence Award 2019 (checklist digital para auditores de calidad, que según su CV generó $900M en ingresos para la empresa). Nota: aún no se ha agendado llamada de descubrimiento; su perfil es de ingeniería de calidad/manufactura y no menciona experiencia directa en diseño de test fixtures, automatización de pruebas ni viajes/CMs en China — encaje con esta vacante pendiente de evaluar en llamada." }
+      ],
+      companies: HARDWARE_COMPANIES
+    },
+    bdr: {
+      id: 'bdr',
+      tabLabel: { es: "BDR (Ventas)", en: "BDR (Sales)" },
+      title: { es: "Business Development Representative — Outpost QA", en: "Business Development Representative — Outpost QA" },
+      subtitle: { es: "Seguimiento del proyecto: vacante de Business Development Representative para el motor de outbound de Outpost, con sede en Mazatlán", en: "Project tracker: Business Development Representative role for Outpost's outbound engine, based in Mazatlán" },
+      hasSeniorityLevels: false,
+      seniorityLevels: [],
+      seniorityLabel: { es: "Rango de años de experiencia", en: "Years of experience range" },
+      currentStepIndex: 0,
+      requirements: BDR_REQUIREMENTS,
+      overview: {
+        title: { es: "Resumen de la vacante", en: "Role summary" },
+        hint: { es: "Extraído directamente de la JD compartida por el equipo de Outpost", en: "Drawn directly from the JD shared by the Outpost team" },
+        cardA: {
+          tag: { es: "Sobre el rol", en: "About the role" },
+          bullets: [
+            { es: "Presencial en Mazatlán, Sinaloa, tiempo completo; abierto a remoto dentro de México para un candidato excepcional.", en: "In-office in Mazatlán, Sinaloa, full-time; open to remote within Mexico for an exceptional candidate." },
+            { es: "Construiría el motor de outbound de Outpost junto con el fundador/CEO — no es un rol de alto volumen ni de \"script y marcar\"; se venden engagements de alto valor a un grupo enfocado de empresas de hardware y software técnico en EE. UU., por lo que cada cuenta importa.", en: "Would build Outpost's outbound growth engine alongside the founder/CEO — not a high-volume, script-and-dial role; Outpost sells high-value engagements to a focused set of US-based hardware and technical software companies, so every account matters." },
+            { es: "Responsabilidades principales: investigar cuentas objetivo e identificar a los stakeholders correctos; correr outbound personalizado multi-touch (correo, teléfono, LinkedIn) para agendar llamadas de descubrimiento calificadas; usar la Lead Intelligence Platform interna y Zoho CRM; iterar mensajes semanalmente con el CEO; calificar interés entrante/referidos; dueño de sus números (reuniones calificadas agendadas y su conversión).", en: "Main responsibilities: research target accounts and identify the right stakeholders; run personalized multi-touch outbound (email, phone, LinkedIn) to book qualified discovery calls; use the internal Lead Intelligence Platform and Zoho CRM; iterate messaging weekly with the CEO; qualify inbound/referral interest; own their numbers (qualified meetings booked and their conversion)." },
+            { es: "Camino de crecimiento: de BDR hacia un rol de Account Executive (cierre) conforme se demuestre la tracción.", en: "Growth path: from BDR toward an Account Executive (closing) role as they prove the motion." }
+          ]
+        },
+        cardB: {
+          tag: { es: "Requisitos", en: "Requirements" },
+          bullets: [
+            { es: "2–4 años en desarrollo de ventas B2B outbound vendiendo productos o servicios complejos/técnicos (SaaS, herramientas para desarrolladores, servicios técnicos), idealmente a compradores en EE. UU.", en: "2–4 years in outbound B2B sales development or business development, selling complex or technical products or services (SaaS, developer tools, or technical services) — ideally to US-based buyers." },
+            { es: "Inglés casi nativo, escrito y hablado (C1 o superior); enfoque de investigación basado en cuentas (no solo volumen); curiosidad técnica (no requiere carrera en Ciencias de la Computación); hábitos disciplinados de CRM y herramientas modernas de ventas.", en: "Near-native English, written and spoken (C1 or higher); a demonstrated research-led, account-based approach (not purely volume); technical curiosity (a CS degree is not required); disciplined CRM habits and comfort with modern sales tooling." },
+            { es: "Deseable: experiencia vendiendo a hardware de EE. UU. o industrias reguladas (médico, industrial, seguridad) o herramientas para desarrolladores/ingeniería; exposición a QA de software o testing; experiencia con Zoho CRM; experiencia como miembro fundador/temprano de un equipo de ventas construyendo una motion desde cero.", en: "Nice-to-have: experience selling into US hardware or regulated industries (medical, industrial, security) or developer/engineering tools; exposure to software QA or testing; experience with Zoho CRM; experience as an early/founding member of a sales team building a motion from scratch." }
+          ]
+        }
+      },
+      candidates: [
+        { name: "Samuel Carmona Baltazar", shortName: "Samuel Carmona", yearsExperience: 15, yearsPlus: true, linkedin: "", zoho: "", age: "", location: "Mazatlán, Sinaloa", seniority: "Bilingual Dispatcher & Customer Service Rep en Supreme Garage Door / SGD Group, Carrollton TX (remoto), sep 2025–abr 2026: coordinación de despacho con Workiz CRM. Previamente Data Entry & Bookkeeping Specialist en Universal Express Tax LLC, Mazatlán (jul 2021–ago 2025): conciliación de registros fiscales con QuickBooks Online. Lead Generator / Acquisition Manager en Fink Buy Houses, Houston TX remoto (abr 2021–jul 2022): cold-calling para identificar vendedores de propiedades. Account Manager en Diazteca, Mazatlán (mar 2019–sep 2020): cuentas B2B de distribución de producto fresco. Sales Supervisor (Vacation Ownership) en Hotel El Cid, Mazatlán (jun 2014–mar 2019): supervisión de equipo de telemarketing outbound de timeshare, entrenamiento de vendedores nuevos. Customer Service Rep en Teletech S.C. / Charter Communications (Spectrum), remoto/CDMX (dic 2011–ene 2014): 50–80 llamadas entrantes/día. Medical Interpreter en Manrrique Communications, Raleigh NC (ene 2006–sep 2010). Nota: las fechas de su CV muestran un traslape entre Universal Express Tax (jul 2021–ago 2025) y Fink Buy Houses (abr 2021–jul 2022) — no aclarado en la llamada.", tools: "Workiz (CRM de despacho); QuickBooks Online; Google Workspace. En la llamada mencionó también haber usado HubSpot y Slack como CRM en otros proyectos (no aparecen en su CV). Usa Gemini y cuentas de nube de IA para investigar cuentas y conceptos técnicos nuevos.", aiToolTags: ["Gemini"], languages: "", salary: "$60,000–$65,000 MXN brutos al mes bajo esquema de honorarios (pago directo de impuestos), según indicó en la llamada; abierto a negociar un esquema de salario base + comisiones, con interés explícito en compensación variable ligada a resultados.", checklist: { ingles: "Amarillo", experienciaOutbound: "Amarillo", enfoqueCuentas: "Verde", curiosidadTecnica: "Verde", crm: "Verde", coachability: "", mentalidadAnalitica: "Verde", experienciaHardwareQA: "Rojo" }, extraSkills: "15+ años de experiencia en ventas, servicio al cliente y operaciones; bilingüe inglés/español (native Spanish speaker, English professional full proficiency según su CV). Coursework de nivel asociado en Wake Tech Community College, Raleigh NC (no concluido). Nota: en la llamada fue explícito en que no ha vendido proyectos de tecnología/software directamente (\"proyectos de tecnología como software no he vendido\"); su experiencia de ventas B2B/outbound es en bienes raíces, timeshare, distribución de producto y servicio al cliente, no en SaaS ni herramientas técnicas. Confirmó disponibilidad inmediata para iniciar y apertura a trabajar híbrido, remoto o presencial en las oficinas de Mazatlán." }
+      ],
+      companies: BDR_COMPANIES
+    }
+  };
+
+  var currentJD = 'sdet';
+  var JD_ORDER = ['sdet', 'hardware', 'bdr'];
+
+  function statusInfo(raw) {
+    var v = (raw || "").trim().toLowerCase();
+    if (v === "verde" || v === "cumple") return "good";
+    if (v === "amarillo" || v === "parcial") return "warning";
+    if (v === "rojo" || v === "no cumple") return "critical";
+    return "pending";
+  }
+
+  function uniqueNonEmpty(list) {
+    var seen = {}; var out = [];
+    list.forEach(function(v) {
+      var val = (v || "").trim();
+      if (val && !seen[val]) { seen[val] = true; out.push(val); }
+    });
+    return out;
+  }
+
+  var translations = {
+    es: {
+      updatedLabel: "Última actualización: 1 de septiembre, 2026",
+      themeToggle: "Cambiar tema",
+      statStatusLabel: "Estado del proyecto",
+      statStatusHint: "JD en borrador, aún sin validar con el mercado",
+      statContactedLabel: "Perfiles de LinkedIn contactados",
+      statCallsLabel: "Llamadas completadas",
+      analysisTitle: "Resumen del avance",
+      analysisHint: "Análisis automático a partir de lo que ya se ha capturado de cada candidato",
+      analysisProgress: "Contactos con llamada/detalle capturado",
+      analysisModeTitle: "Nivel de cumplimiento por requisito de la JD (moda entre los {n} candidatos)",
+      analysisTools: "Herramientas de IA más mencionadas",
+      analysisLocations: "Ubicaciones mencionadas",
+      analysisSalary: "Rango salarial en pesos mexicanos (MXN, bruto antes de impuestos, mínimo–máximo compartido)",
+      salaryRangeNote: "Basado en el último salario reportado por cada candidato ({n} capturado(s)).",
+      salaryRangeEmpty: "Aún no hay suficientes datos de salario capturados",
+      analysisAge: "Rango de edad (aproximada, mínima–máxima compartida)",
+      ageRangeNote: "Basado en {n} candidato(s) con edad aproximada compartida.",
+      ageRangeEmpty: "Aún no hay datos de edad capturados",
+      analysisEmptyTitle: "Aún no hay candidatos para analizar",
+      analysisEmptyBody: "En cuanto agregues el primer perfil de esta vacante, aquí aparecerá el análisis automático (checklist, ubicaciones, rango salarial, etc.).",
+      candidatesTitle: "Perfiles de LinkedIn contactados",
+      candidatesHint: "Se completa conforme se agenden y realicen las llamadas de descubrimiento",
+      candidatesProgress: "{done} de {total} llamadas completadas — el resto sigue en la etapa de primer contacto por LinkedIn",
+      candidatesEmptyTitle: "Aún no hay perfiles contactados para esta vacante",
+      candidatesEmptyBody: "Comparte los CVs o notas de descubrimiento de los primeros candidatos y los agrego aquí.",
+      fieldName: "Nombre",
+      fieldHeadline: "LinkedIn",
+      fieldZoho: "Perfil en Zoho Recruit",
+      fieldAge: "Edad",
+      fieldLocation: "Ubicación (México)",
+      fieldSeniority: "Seniority / rol actual",
+      fieldAiTools: "Herramientas de IA que usa",
+      fieldLanguages: "Lenguajes de programación",
+      fieldSalary: "Rango salarial compartido (MXN, bruto, último salario)",
+      pendingValue: "Pendiente (llamada aún no realizada)",
+      viewProfile: "Ver perfil",
+      candidateBadgePending: "Llamada pendiente",
+      candidateBadgeDone: "Con detalle capturado",
+      checklistTitle: "Checklist vs. JD",
+      statusLabels: { good: "Cumple", warning: "Parcial", critical: "No cumple", pending: "Sin evaluar" },
+      extraSkillsLabel: "Habilidades adicionales (no están en la JD)",
+      extraSkillsEmpty: "Ninguna registrada todavía",
+      companiesTitle: "Empresas con posiciones similares",
+      companiesHint: "Vacantes de otras empresas para comparar responsabilidades, seniority y mercado",
+      companiesEmptyTitle: "Aún no hay vacantes registradas",
+      companiesEmptyBody: "En cuanto agregues una fila en el Sheet de empresas, aparecerá aquí en la siguiente sincronización.",
+      fieldCompany: "Empresa",
+      fieldJobTitle: "Título del anuncio",
+      fieldPlatform: "Plataforma",
+      fieldCompanyLocation: "Ubicación",
+      fieldSalaryReported: "Salario reportado",
+      fieldRequirements: "Requisitos clave",
+      fieldDateChecked: "Fecha de consulta",
+      fieldNotesCompany: "Notas",
+      viewListing: "Ver anuncio"
+    },
+    en: {
+      updatedLabel: "Last updated: September 1, 2026",
+      themeToggle: "Toggle theme",
+      statStatusLabel: "Project status",
+      statStatusHint: "JD in draft, not yet validated with the market",
+      statContactedLabel: "LinkedIn profiles contacted",
+      statCallsLabel: "Calls completed",
+      analysisTitle: "Progress summary",
+      analysisHint: "Automatic analysis based on what's been captured for each candidate so far",
+      analysisProgress: "Contacts with a call/detail captured",
+      analysisModeTitle: "Compliance level by JD requirement (mode across the {n} candidates)",
+      analysisTools: "Most-mentioned AI tools",
+      analysisLocations: "Locations mentioned",
+      analysisSalary: "Salary range in Mexican pesos (MXN, gross before taxes, minimum–maximum shared)",
+      salaryRangeNote: "Based on each candidate's last reported salary ({n} captured).",
+      salaryRangeEmpty: "Not enough salary data captured yet",
+      analysisAge: "Age range (approximate, minimum–maximum shared)",
+      ageRangeNote: "Based on {n} candidate(s) with an approximate age shared.",
+      ageRangeEmpty: "No age data captured yet",
+      analysisEmptyTitle: "No candidates to analyze yet",
+      analysisEmptyBody: "As soon as you add the first profile for this role, the automatic analysis (checklist, locations, salary range, etc.) will appear here.",
+      candidatesTitle: "LinkedIn profiles contacted",
+      candidatesHint: "Fills in as discovery calls are scheduled and completed",
+      candidatesProgress: "{done} of {total} calls completed — the rest are still at the initial LinkedIn contact stage",
+      candidatesEmptyTitle: "No profiles contacted yet for this role",
+      candidatesEmptyBody: "Share the first candidates' CVs or discovery-call notes and I'll add them here.",
+      fieldName: "Name",
+      fieldHeadline: "LinkedIn",
+      fieldZoho: "Zoho Recruit profile",
+      fieldAge: "Age",
+      fieldLocation: "Location (Mexico)",
+      fieldSeniority: "Seniority / current role",
+      fieldAiTools: "AI tools they use",
+      fieldLanguages: "Programming languages",
+      fieldSalary: "Salary range shared (MXN, gross, last salary)",
+      pendingValue: "Pending (call not yet done)",
+      viewProfile: "View profile",
+      candidateBadgePending: "Call pending",
+      candidateBadgeDone: "Detail captured",
+      checklistTitle: "Checklist vs. JD",
+      statusLabels: { good: "Meets", warning: "Partial", critical: "Doesn't meet", pending: "Not assessed" },
+      extraSkillsLabel: "Additional skills (not in the JD)",
+      extraSkillsEmpty: "None recorded yet",
+      companiesTitle: "Companies with similar openings",
+      companiesHint: "Other companies' postings to compare responsibilities, seniority, and market positioning",
+      companiesEmptyTitle: "No postings logged yet",
+      companiesEmptyBody: "As soon as you add a row in the companies Sheet, it will show up here in the next sync.",
+      fieldCompany: "Company",
+      fieldJobTitle: "Posting title",
+      fieldPlatform: "Platform",
+      fieldCompanyLocation: "Location",
+      fieldSalaryReported: "Salary reported",
+      fieldRequirements: "Key requirements",
+      fieldDateChecked: "Date checked",
+      fieldNotesCompany: "Notes",
+      viewListing: "View listing"
+    }
+  };
+
+  var currentLang = 'es';
+
+  function fieldOrPending(val, t) {
+    var v = (val || "").trim();
+    return v ? '<div class="field-value">' + v + '</div>' : '<div class="field-value pending">' + t.pendingValue + '</div>';
+  }
+
+  function renderTabs(lang) {
+    var html = JD_ORDER.map(function(id) {
+      var cfg = JD_CONFIGS[id];
+      return '<button class="tab-btn' + (id === currentJD ? ' active' : '') + '" onclick="switchJD(\'' + id + '\')">' + cfg.tabLabel[lang] + '</button>';
+    }).join('');
+    document.getElementById('tabBar').innerHTML = html;
+  }
+
+  function switchJD(id) {
+    currentJD = id;
+    applyLang(currentLang);
+  }
+
+  function renderOverview(lang) {
+    var cfg = JD_CONFIGS[currentJD];
+    document.getElementById('overviewTitleText').textContent = cfg.overview.title[lang];
+    document.getElementById('overviewHintText').textContent = cfg.overview.hint[lang];
+
+    function cardHtml(card, extraClass) {
+      var tagClass = extraClass === 'before-card' ? 'before' : 'after';
+      var bulletsHtml = card.bullets.map(function(b) { return '<li>' + b[lang] + '</li>'; }).join('');
+      var details = card.fullText
+        ? '<details class="full-text"><summary>' + card.detailsSummary[lang] + '</summary><div class="body-text">' + card.fullText[lang] + '</div></details>'
+        : '';
+      return '<div class="card evo-card ' + extraClass + '"><h3><span class="evo-tag ' + tagClass + '">' + card.tag[lang] + '</span></h3><ul>' + bulletsHtml + '</ul>' + details + '</div>';
+    }
+
+    document.getElementById('overviewCard').innerHTML = cardHtml(cfg.overview.cardA, 'before-card') + cardHtml(cfg.overview.cardB, 'after-card');
+  }
+
+  function renderCandidates(lang) {
+    var cfg = JD_CONFIGS[currentJD];
+    var t = translations[lang];
+
+    if (!cfg.candidates.length) {
+      document.getElementById('candidatesList').innerHTML = '<div class="empty-state"><strong>' + t.candidatesEmptyTitle + '</strong><span>' + t.candidatesEmptyBody + '</span></div>';
+      var emptyNoteEl = document.getElementById('candidatesProgressNote');
+      if (emptyNoteEl) emptyNoteEl.textContent = '';
+      return;
+    }
+
+    var html = cfg.candidates.map(function(c) {
+      var callDataDone = hasCallData(c, cfg);
+      var nameHtml = callDataDone ? '<span class="candidate-name-done">' + c.name + '</span>' : c.name;
+      var badgeHtml = callDataDone ? '' : ' <span class="candidate-badge">' + t.candidateBadgePending + '</span>';
+      var zohoField = c.zoho && c.zoho.trim()
+        ? '<div class="field-value"><a href="' + c.zoho + '" target="_blank" rel="noopener">' + t.viewProfile + '</a></div>'
+        : '<div class="field-value pending">' + t.pendingValue + '</div>';
+      var linkedinField = c.linkedin && c.linkedin.trim()
+        ? '<div class="field-value"><a href="' + c.linkedin + '" target="_blank" rel="noopener">' + t.viewProfile + '</a></div>'
+        : '<div class="field-value pending">' + t.pendingValue + '</div>';
+      return '<details class="candidate-card">' +
+        '<summary class="candidate-summary"><span>' + nameHtml + badgeHtml + '</span><span class="chev">▾</span></summary>' +
+        '<div class="candidate-body"><div class="field-grid">' +
+          '<div><div class="field-label">' + t.fieldName + '</div><div class="field-value">' + c.name + '</div></div>' +
+          '<div><div class="field-label">' + t.fieldHeadline + '</div>' + linkedinField + '</div>' +
+          '<div><div class="field-label">' + t.fieldZoho + '</div>' + zohoField + '</div>' +
+          '<div><div class="field-label">' + t.fieldAge + '</div>' + fieldOrPending(c.age, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldLocation + '</div>' + fieldOrPending(c.location, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldSeniority + '</div>' + fieldOrPending(c.seniority, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldAiTools + '</div>' + fieldOrPending(c.tools, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldLanguages + '</div>' + fieldOrPending(c.languages, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldSalary + '</div>' + fieldOrPending(c.salary, t) + '</div>' +
+        '</div>' +
+        '<div class="checklist">' +
+          '<div class="checklist-title">' + t.checklistTitle + '</div>' +
+          cfg.requirements.map(function(item) {
+            var status = statusInfo(c.checklist[item.key]);
+            return '<div class="checklist-row">' +
+              '<span class="checklist-dot ' + status + '"></span>' +
+              '<span class="checklist-label">' + item[lang] + '</span>' +
+              '<span class="checklist-status ' + status + '">' + t.statusLabels[status] + '</span>' +
+            '</div>';
+          }).join('') +
+        '</div>' +
+        '<div class="extra-skills">' +
+          '<div class="field-label">' + t.extraSkillsLabel + '</div>' +
+          '<div class="field-value' + (c.extraSkills && c.extraSkills.trim() ? '' : ' pending') + '">' + (c.extraSkills && c.extraSkills.trim() ? c.extraSkills : t.extraSkillsEmpty) + '</div>' +
+        '</div>' +
+        '</div>' +
+      '</details>';
+    }).join('');
+    document.getElementById('candidatesList').innerHTML = html;
+  }
+
+  function renderCompanies(lang) {
+    var cfg = JD_CONFIGS[currentJD];
+    var t = translations[lang];
+    var companiesEl = document.getElementById('companiesList');
+    if (!companiesEl) return;
+
+    var companies = cfg.companies || [];
+    if (!companies.length) {
+      companiesEl.innerHTML = '<div class="empty-state accent-yellow"><strong>' + t.companiesEmptyTitle + '</strong><span>' + t.companiesEmptyBody + '</span></div>';
+      return;
+    }
+
+    var html = companies.map(function(co) {
+      var urlField = co.url && co.url.trim()
+        ? '<div class="field-value"><a href="' + co.url + '" target="_blank" rel="noopener">' + t.viewListing + '</a></div>'
+        : '<div class="field-value pending">' + t.pendingValue + '</div>';
+      return '<details class="candidate-card">' +
+        '<summary class="candidate-summary"><span>' + co.company + '</span><span class="chev">▾</span></summary>' +
+        '<div class="candidate-body"><div class="field-grid">' +
+          '<div><div class="field-label">' + t.fieldCompany + '</div>' + fieldOrPending(co.company, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldJobTitle + '</div>' + fieldOrPending(co.title, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldPlatform + '</div>' + fieldOrPending(co.platform, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldCompanyLocation + '</div>' + fieldOrPending(co.location, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldSalaryReported + '</div>' + fieldOrPending(co.salary, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldDateChecked + '</div>' + fieldOrPending(co.dateChecked, t) + '</div>' +
+          '<div><div class="field-label">' + t.viewListing + '</div>' + urlField + '</div>' +
+        '</div>' +
+        '<div class="extra-skills">' +
+          '<div class="field-label">' + t.fieldRequirements + '</div>' +
+          '<div class="field-value' + (co.requirements && co.requirements.trim() ? '' : ' pending') + '">' + (co.requirements && co.requirements.trim() ? co.requirements : t.pendingValue) + '</div>' +
+        '</div>' +
+        '<div class="extra-skills">' +
+          '<div class="field-label">' + t.fieldNotesCompany + '</div>' +
+          '<div class="field-value' + (co.notes && co.notes.trim() ? '' : ' pending') + '">' + (co.notes && co.notes.trim() ? co.notes : t.pendingValue) + '</div>' +
+        '</div>' +
+        '</div>' +
+      '</details>';
+    }).join('');
+    companiesEl.innerHTML = html;
+  }
+
+  function callsCompletedCount(cfg) {
+    return cfg.candidates.filter(function(c) { return hasCallData(c, cfg); }).length;
+  }
+
+  function renderTimeline(lang) {
+    var cfg = JD_CONFIGS[currentJD];
+    var t = translations[lang];
+    var total = cfg.candidates.length;
+    var callsDone = callsCompletedCount(cfg);
+
+    var stepsHtml = PROJECT_STEPS.map(function(step, i) {
+      var state = i < cfg.currentStepIndex ? 'done' : (i === cfg.currentStepIndex ? 'current' : 'upcoming');
+      var dotContent = state === 'done' ? '✓' : String(i + 1);
+      return '<div class="timeline-step ' + state + '">' +
+          '<div class="timeline-dot">' + dotContent + '</div>' +
+          '<div class="timeline-label">' + step[lang] + '</div>' +
+        '</div>';
+    }).join('');
+
+    var html = '<div class="timeline">' + stepsHtml + '</div>' +
+      '<div class="status-stats-grid">' +
+        '<div class="stat-tile accent-blue"><div class="stat-label">' + t.statContactedLabel + '</div><div class="stat-value">' + total + '</div></div>' +
+        '<div class="stat-tile accent-brown"><div class="stat-label">' + t.statCallsLabel + '</div><div class="stat-value">' + callsDone + '</div></div>' +
+      '</div>';
+    document.getElementById('statusCard').innerHTML = html;
+
+    var noteEl = document.getElementById('candidatesProgressNote');
+    if (noteEl && total) {
+      noteEl.textContent = t.candidatesProgress.replace('{done}', callsDone).replace(/\{total\}/g, total);
+    }
+  }
+
+  function renderModeChart(lang, cfg) {
+    var t = translations[lang];
+    var total = cfg.candidates.length;
+    var order = ['good', 'warning', 'critical', 'pending'];
+
+    var rows = cfg.requirements.map(function(item) {
+      var counts = { good: 0, warning: 0, critical: 0, pending: 0 };
+      cfg.candidates.forEach(function(c) {
+        counts[statusInfo(c.checklist[item.key])]++;
+      });
+      var segs = order.map(function(k) {
+        if (!counts[k]) return '';
+        var pct = (counts[k] / total * 100);
+        return '<div class="mode-seg ' + k + '" style="width:' + pct + '%" title="' + t.statusLabels[k] + ': ' + counts[k] + '"></div>';
+      }).join('');
+      return '<div class="mode-row">' +
+          '<div class="mode-row-label">' + item[lang] + '</div>' +
+          '<div class="mode-bar">' + segs + '</div>' +
+        '</div>';
+    }).join('');
+
+    var legend = order.map(function(k) {
+      return '<span class="mode-legend-item"><span class="mode-legend-dot ' + k + '"></span>' + t.statusLabels[k] + '</span>';
+    }).join('');
+
+    return '<div class="mode-chart">' + rows + '</div><div class="mode-legend">' + legend + '</div>';
+  }
+
+  function topTools(n, cfg) {
+    var freq = {};
+    cfg.candidates.forEach(function(c) {
+      (c.aiToolTags || []).forEach(function(tag) { freq[tag] = (freq[tag] || 0) + 1; });
+    });
+    return Object.keys(freq).map(function(k) { return { tag: k, count: freq[k] }; })
+      .sort(function(a, b) { return b.count - a.count || a.tag.localeCompare(b.tag); })
+      .slice(0, n);
+  }
+
+  function chipList(list) {
+    if (!list.length) return '';
+    return '<div class="chip-list">' + list.map(function(v) { return '<span class="chip">' + v + '</span>'; }).join('') + '</div>';
+  }
+
+  // Todas las cifras de salario capturadas se registran en pesos mexicanos (MXN),
+  // brutos antes de impuestos, con base en el último salario reportado por el
+  // candidato — por eso ya no se exige el texto "MXN" para reconocer el valor.
+  function parseSalaryAmount(str) {
+    var s = str || '';
+    var m = s.replace(/,/g, '').match(/\$?\s*(\d{2,7})/);
+    return m ? parseInt(m[1], 10) : null;
+  }
+
+  function salaryRangeText(cfg) {
+    var values = cfg.candidates.map(function(c) { return parseSalaryAmount(c.salary); }).filter(function(v) { return v !== null; });
+    if (!values.length) return null;
+    var min = Math.min.apply(null, values), max = Math.max.apply(null, values);
+    var fmt = function(n) { return '$' + n.toLocaleString('es-MX'); };
+    return { text: (min === max ? fmt(min) + ' MXN' : fmt(min) + ' – ' + fmt(max) + ' MXN'), n: values.length };
+  }
+
+  // Los campos de edad son texto libre ("30 años aproximado", "No proporcionado",
+  // etc.) — se toma el primer número que aparezca como la edad aproximada.
+  function parseAgeYears(str) {
+    var s = str || '';
+    var m = s.match(/(\d{1,3})/);
+    return m ? parseInt(m[1], 10) : null;
+  }
+
+  function ageRangeText(lang, cfg) {
+    var values = cfg.candidates.map(function(c) { return parseAgeYears(c.age); }).filter(function(v) { return v !== null; });
+    if (!values.length) return null;
+    var min = Math.min.apply(null, values), max = Math.max.apply(null, values);
+    var unit = function(n) { return lang === 'es' ? (n === 1 ? ' año' : ' años') : (n === 1 ? ' yr' : ' yrs'); };
+    return { text: (min === max ? (min + unit(min)) : (min + ' – ' + max + unit(max))), n: values.length };
+  }
+
+  function renderAnalysis(lang) {
+    var cfg = JD_CONFIGS[currentJD];
+    var t = translations[lang];
+    var total = cfg.candidates.length;
+
+    if (!total) {
+      document.getElementById('analysisCard').innerHTML = '<div class="empty-state"><strong>' + t.analysisEmptyTitle + '</strong><span>' + t.analysisEmptyBody + '</span></div>';
+      return;
+    }
+
+    var withDetail = callsCompletedCount(cfg);
+    var locations = uniqueNonEmpty(cfg.candidates.map(function(c) { return c.location; }));
+    var tools = topTools(6, cfg);
+    var salaryRange = salaryRangeText(cfg);
+
+    var withLevel = cfg.candidates.filter(function(c) { return typeof c.yearsExperience === 'number'; });
+    var yearsLabelFor = function(c) {
+      return (c.yearsApprox ? '~' : '') + c.yearsExperience + (c.yearsPlus ? '+' : '') + (lang === 'es' ? (c.yearsExperience === 1 ? ' año' : ' años') : (c.yearsExperience === 1 ? ' yr' : ' yrs'));
+    };
+    var seniorityRangeText = '';
+    if (withLevel.length) {
+      var minC = withLevel.reduce(function(a, b) { return b.yearsExperience < a.yearsExperience ? b : a; });
+      var maxC = withLevel.reduce(function(a, b) { return b.yearsExperience > a.yearsExperience ? b : a; });
+      if (cfg.hasSeniorityLevels) {
+        var minText = seniorityLevel(minC.yearsExperience, cfg) + ' (' + yearsLabelFor(minC) + ')';
+        var maxText = seniorityLevel(maxC.yearsExperience, cfg) + ' (' + yearsLabelFor(maxC) + ')';
+        seniorityRangeText = minC === maxC ? minText : minText + ' – ' + maxText;
+      } else {
+        seniorityRangeText = minC === maxC ? yearsLabelFor(minC) : yearsLabelFor(minC) + ' – ' + yearsLabelFor(maxC);
+      }
+    }
+
+    var toolsValue = tools.length
+      ? tools.map(function(x) { return x.tag + ' (' + x.count + ')'; }).join(', ')
+      : t.pendingValue;
+    var locationsValue = locations.length ? chipList(locations) : ('<span class="field-value pending">' + t.pendingValue + '</span>');
+    var seniorityValue = seniorityRangeText ? ('<div class="field-value">' + seniorityRangeText + '</div>') : ('<span class="field-value pending">' + t.pendingValue + '</span>');
+    var salaryValue = salaryRange
+      ? salaryRange.text + '<div class="mode-row-count" style="margin-top:4px;">' + t.salaryRangeNote.replace('{n}', salaryRange.n) + '</div>'
+      : t.salaryRangeEmpty;
+
+    var ageRange = ageRangeText(lang, cfg);
+    var ageValue = ageRange
+      ? ageRange.text + '<div class="mode-row-count" style="margin-top:4px;">' + t.ageRangeNote.replace('{n}', ageRange.n) + '</div>'
+      : t.ageRangeEmpty;
+
+    var html = '<div class="analysis-item"><div class="field-label">' + t.analysisProgress + '</div><div class="field-value">' + withDetail + ' / ' + total + '</div></div>' +
+      '<div class="analysis-block" style="margin-top:16px;">' +
+        '<div class="field-label" style="margin-bottom:10px;">' + t.analysisModeTitle.replace('{n}', total) + '</div>' +
+        renderModeChart(lang, cfg) +
+      '</div>' +
+      '<div class="analysis-grid" style="margin-top:20px;">' +
+        '<div class="analysis-item"><div class="field-label">' + t.analysisTools + '</div><div class="field-value' + (tools.length ? '' : ' pending') + '">' + toolsValue + '</div></div>' +
+        '<div class="analysis-item"><div class="field-label">' + t.analysisLocations + '</div>' + locationsValue + '</div>' +
+        '<div class="analysis-item"><div class="field-label">' + cfg.seniorityLabel[lang] + '</div>' + seniorityValue + '</div>' +
+        '<div class="analysis-item"><div class="field-label">' + t.analysisAge + '</div><div class="field-value' + (ageRange ? '' : ' pending') + '">' + ageValue + '</div></div>' +
+        '<div class="analysis-item"><div class="field-label">' + t.analysisSalary + '</div><div class="field-value' + (salaryRange ? '' : ' pending') + '">' + salaryValue + '</div></div>' +
+      '</div>';
+    document.getElementById('analysisCard').innerHTML = html;
+  }
+
+  function applyLang(lang) {
+    var cfg = JD_CONFIGS[currentJD];
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (translations[lang][key] !== undefined) el.textContent = translations[lang][key];
+    });
+    document.getElementById('langBtn').textContent = lang === 'es' ? 'English' : 'Español';
+    document.documentElement.setAttribute('lang', lang);
+    document.getElementById('jdTitleEl').textContent = cfg.title[lang];
+    document.getElementById('jdSubtitleEl').textContent = cfg.subtitle[lang];
+    renderTabs(lang);
+    renderOverview(lang);
+    renderTimeline(lang);
+    renderAnalysis(lang);
+    renderCandidates(lang);
+    renderCompanies(lang);
+  }
+
+  function toggleLang() { currentLang = currentLang === 'es' ? 'en' : 'es'; applyLang(currentLang); }
+  function toggleTheme() { var root = document.documentElement; var current = root.getAttribute('data-theme'); root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark'); }
+
+  applyLang(currentLang);
+</script>
+</body>
+</html>
