@@ -234,10 +234,7 @@
     <h2 class="accent-yellow"><span data-i18n="companiesTitle"></span></h2>
     <p class="section-hint" data-i18n="companiesHint"></p>
 
-    <div class="empty-state accent-yellow">
-      <strong data-i18n="companiesEmptyTitle"></strong>
-      <span data-i18n="companiesEmptyBody"></span>
-    </div>
+    <div id="companiesList"></div>
   </section>
 
 
@@ -337,6 +334,23 @@
     { name: "Kevin De Gracia", shortName: "Kevin De Gracia", yearsExperience: 2, linkedin: "", zoho: "", age: "", location: "", seniority: "2 años de experiencia profesional — por debajo del mínimo de 6+ años que pide la JD de SDET. Zoho Recruit incluye una nota de la llamada de discovery que señala que \"su compromiso con la auto-mejora técnica dentro de un entorno corporativo parece bajo, según retroalimentación de su rol anterior\" — se relaya esta observación de forma honesta tal como está registrada.", tools: "A pesar de la nota de Zoho sobre su nivel general, sus proyectos personales en GitHub muestran mayor profundidad técnica de la que sugiere la etiqueta general de Zoho (\"TypeScript (Initial)\"): frameworks propios con Playwright + TypeScript y Page Object Model (POM).", aiToolTags: [], languages: "TypeScript (nivel inicial según Zoho, aunque sus proyectos personales muestran mayor manejo práctico); Playwright en proyectos propios con arquitectura POM.", salary: "$21,400 MXN (según Zoho)", checklist: { ingles: "Amarillo", experiencia: "Rojo", typescript: "Amarillo", playwright: "Amarillo", iaPractica: "Rojo", validacionIA: "Rojo", agile: "Amarillo", comunicacion: "Amarillo" }, extraSkills: "Fit general débil para esta vacante dado el requisito de 6+ años de experiencia (tiene 2). Se incluye la nota textual de Zoho sobre su compromiso de auto-mejora para que Carito tenga el contexto completo, junto con la señal más alentadora de sus proyectos personales en GitHub." }
   ];
 
+  var SDET_COMPANIES = [
+    { company: "Tech Holding", title: "Senior SDET - Test Automation & Performance Engineering", platform: "Greenhouse", location: "Remoto (México)", salary: "No revelado", requirements: "Contrato; testing de API/servicios distribuidos y cloud (AWS); performance (k6/Gatling/Locust/JMeter); integración CI/CD; gestión de datos de prueba", url: "https://job-boards.greenhouse.io/techholding/jobs/4730457005", dateChecked: "14/09/2026", notes: "Vacante activa al momento de la consulta; salario no revelado en el anuncio." },
+    { company: "DaCodes", title: "QA Automation (Python, Cypress/Playwright) - English Required - Only México", platform: "BuiltIn", location: "Remoto (Cd. de México)", salary: "No revelado", requirements: "3+ años como QA Engineer o SDET; Python, TypeScript, SQL; Cypress/Playwright, Pytest; inglés C1", url: "https://builtin.com/job/qa-automation-python-cypress-playwright-english-required-only-m-xico/7844993", dateChecked: "14/09/2026", notes: "Anuncio marcado como cerrado/removido el 30/12/2025 según BuiltIn; se incluye solo como referencia de requisitos de mercado." },
+    { company: "N/A (dato agregado, no es una vacante específica)", title: "Promedio salarial reportado - SDET", platform: "Payscale (dato agregado)", location: "México (agregado nacional)", salary: "Promedio $739,821 MXN/año (~$61,652 MXN/mes); rango $381,000-$771,000 MXN/año", requirements: "N/A (dato salarial agregado, no lista requisitos)", url: "https://www.payscale.com/research/MX/Job=Software_Development_Engineer%2C_Test_(SDET)/Salary", dateChecked: "14/09/2026", notes: "Muestra de solo 3 respuestas de encuesta - baja confiabilidad estadística. Dato actualizado 01/05/2025." }
+  ];
+
+  var HARDWARE_COMPANIES = [
+    { company: "Flex", title: "Test Engineer", platform: "BuiltIn", location: "Guadalajara, Jalisco (presencial, North Campus)", salary: "No revelado", requirements: "Electrónica de potencia y sistemas trifásicos; programación (Python/JavaScript/PHP/HTML/C#) para automatización de pruebas; liderazgo de técnicos; inglés y español fluido; contacto con cliente", url: "https://builtin.com/job/test-engineer/9604055", dateChecked: "14/09/2026", notes: "Anuncio removido el 10/07/2026 según BuiltIn; no menciona explícitamente NPI/EVT-DVT-PVT ni viajes a China - se incluye como comparable de mercado en Guadalajara, no como match exacto del rol." },
+    { company: "N/A (dato agregado)", title: "Sueldo reportado - Test Engineer, Guadalajara", platform: "Glassdoor (dato agregado)", location: "Guadalajara, Jalisco", salary: "Rango reportado $19,000-$38,000 MXN/mes (sueldo base)", requirements: "N/A (dato salarial agregado, no lista requisitos)", url: "https://www.glassdoor.com/Salaries/guadalajara-mexico-test-engineer-salary-SRCH_IL.0,18_IM3087_KO19,32.htm", dateChecked: "14/09/2026", notes: "Página fechada 2026 pero sin fecha específica de actualización ni tamaño de muestra reportado." }
+  ];
+
+  var BDR_COMPANIES = [
+    { company: "OneSeven Tech", title: "Business Development Representative - Outbound Sales, B2B SaaS", platform: "Remotive", location: "Remoto (Argentina / LatAm)", salary: "$2,500-$4,000 USD/mes (base + bono), pago vía Deel", requirements: "3+ años en rol de ventas/SDR/BDR o cara al cliente; inglés fluido; enfoque outbound (correo frío, LinkedIn, llamadas); CRM (Pipedrive); herramientas de correo en frío (Instantly, Apollo, Lemlist)", url: "https://remotive.com/remote/jobs/sales-business/business-development-representative-outbound-sales-b2b-saas-4172410", dateChecked: "14/09/2026", notes: "Vacante 100% remota abierta a LatAm (compañía con sede en Argentina); buen comparable de perfil aunque no específicamente México." },
+    { company: "Remote", title: "Outbound Business Development Representative", platform: "Sitio de la empresa (careers)", location: "Remoto (región AMER)", salary: "OTE $31,500-$88,700 USD/año (salario base ~70% del total)", requirements: "Experiencia previa como SDR en B2B SaaS; inglés fluido; outbound (llamadas en frío, prospección); Salesforce, LinkedIn Sales Navigator, ZoomInfo (deseable)", url: "https://remote.com/openings/6349430003", dateChecked: "14/09/2026", notes: "El anuncio indica que el salario final depende de ubicación, experiencia y otros factores." },
+    { company: "No especificado en el anuncio", title: "Business Development - SaaS", platform: "Michael Page", location: "Ciudad de México", salary: "$27,000-$30,000 MXN/mes ($324,000-$360,000 MXN/año)", requirements: "Experiencia en prospección outbound; sector tecnología/SaaS; enfoque en resultados comerciales; contrato permanente", url: "https://www.michaelpage.com.mx/jobs/business-development/m%C3%A9xico", dateChecked: "14/09/2026", notes: "Único anuncio del listado de Michael Page etiquetado explícitamente como Business Development (outbound); menciona trabajo con clientes internacionales." }
+  ];
+
   var JD_CONFIGS = {
     sdet: {
       id: 'sdet',
@@ -373,7 +387,8 @@
           fullText: { es: "\"Como Senior Automation SDET (IA) en Outpost QA, serás dueño de la automatización y calidad de áreas completas del producto, con la IA como parte central de cómo trabajas — no como una herramienta adicional. Arquitecturarás frameworks de automatización que combinen herramientas tradicionales con agentes y librerías impulsadas por IA, definirás la estrategia de pruebas para sistemas complejos, y decidirás continuamente qué tareas puede asumir la IA de forma confiable y cuáles requieren criterio humano. Este rol también implica mentorear al equipo en prácticas de testing asistido por IA y ayudar a definir cómo se ve la ingeniería de calidad 'AI-native' en Outpost QA.\"", en: "\"As a Senior Automation SDET (AI) at Outpost QA, you will own automation and quality efforts across entire product areas, with AI at the core of how you work — not as an add-on tool. You will architect automation frameworks that combine traditional tooling with AI-driven agents and libraries, define test strategy for complex systems, and continuously decide which tasks AI can reliably take on versus which require human judgment. This role also involves mentoring the team on AI-assisted testing practices and helping define what AI-native quality engineering looks like at Outpost QA.\"" }
         }
       },
-      candidates: SDET_CANDIDATES
+      candidates: SDET_CANDIDATES,
+      companies: SDET_COMPANIES
     },
     hardware: {
       id: 'hardware',
@@ -414,7 +429,8 @@
         { name: "Víctor Hugo Málaga Trujillo", shortName: "Víctor Málaga", yearsExperience: 4, linkedin: "", zoho: "", age: "", location: "Guadalajara, Jalisco", seniority: "Product Engineer en Foxconn Ingrasys México (nov 2025–actualidad): administración e implementación de Engineering Change Orders (ECO), análisis de impacto técnico/económico previo a liberación de cambios, validación de BOMs, coordinación con Manufacturing Engineering/Quality/Planning/Purchasing/Supply Chain, seguimiento de NPI y gestión de cambios en SAP/Agile PLM/Oracle SFC. Previamente Técnico de Introducción de Nuevos Productos (NPI) en Sanmina México (jun 2022–nov 2025): seguimiento de proyectos NPI y corridas piloto, validación de procesos y documentación técnica. Inició como Practicante de Ingeniería en Sanmina México (dic 2021–jun 2022). Años de experiencia (4) calculados a partir de las fechas de su CV (dic 2021–actualidad); su CV no declara una cifra total de años de experiencia.", tools: "SAP, Agile PLM, Oracle SFC, Power BI, Excel avanzado — enfocado en gestión de ECOs/BOMs y dashboards de KPIs, no en diseño/bring-up de test fixtures ni en test funcional/ICT en piso.", aiToolTags: [], languages: "No se menciona explícitamente ningún lenguaje de programación o scripting en su CV; su perfil es de gestión de ingeniería de producto (ECO/BOM/NPI), no de desarrollo de pruebas automatizadas.", salary: "", checklist: emptyChecklist(HARDWARE_REQUIREMENTS), extraSkills: "Certificaciones en Project Management, Lean Six Sigma Yellow Belt, Lean Manufacturing y Accountability; Ingeniería en Procesos y Comercio Internacional (Centro Universitario de la Costa Sur, UDG, 2018–2021); inglés intermedio (B1) — por debajo del nivel de inglés profesional de cara al cliente que pide la JD. Reporta en su CV una recuperación potencial de aprox. USD $18,000 mediante análisis de impacto de materiales y el desarrollo de un dashboard ECO Aging (cifras auto-reportadas por el candidato, no verificadas por Outpost). Nota: su experiencia es más de ingeniería de producto/ECO que de test hardware (fixtures, yield, failure analysis) — posible desalineación con el enfoque de la vacante; aún no se ha agendado llamada de descubrimiento." },
         { name: "Jose Eduardo Guzman Zamora", shortName: "Jose Eduardo Guzman", yearsExperience: 9, yearsPlus: true, linkedin: "", zoho: "", age: "", location: "Guadalajara, Jalisco", seniority: "Manufacturing / Product Engineer en Viking Enterprise Solutions (Sanmina Division), Guadalajara (sep 2021–actualidad): líder técnico en piso de manufactura para lanzamientos NPI y producción de alto volumen de hardware de centros de datos; transferencias internacionales de líneas de manufactura de México a India a través de fases EVT/DVT/Mass Production; investigaciones RCCA con DOE/PDCA/DMAIC; gestión de ECOs/MCOs y desviaciones; supervisión de un equipo de 3 ingenieros y 1 técnico. Previamente FT & Automation Engineer en Vectralis Mechanical Design (abr 2020–sep 2021) y Mechanical Design Engineer en DYCSA (nov 2016–abr 2020), con coordinación de equipos en Alemania y EE. UU. 9+ años de experiencia según su propio CV (\"9+ years of hands-on expertise\").", tools: "PCBA Manufacturing, transiciones de fase NPI (EVT/DVT/MP), DFM/DFX, balanceo de líneas, tooling y fixturing de precisión, sistemas Poka-Yoke, Statistical Process Control (SPC), Root Cause Analysis (DMAIC/PDCA/DOE), gobernanza de cambios (ECO/MCO), estructuras BOM, APQP, estándares IPC (IPC-J-STD-001, IPC-A-610). Reporta en su CV: reducción de 80% en defectos de PCBA/ensamble mecánico en un trimestre mediante tooling/fixturing propio y guías DFM, y mejora de 50% en yields de test a nivel sistema mediante PDCA/control charts (cifras auto-reportadas por el candidato, no verificadas por Outpost).", aiToolTags: [], languages: "No se menciona explícitamente un lenguaje de programación o scripting (Python/LabVIEW no aparecen en el CV); usa SolidWorks, Agile PLM, Minitab y JobBoss ERP.", salary: "", checklist: emptyChecklist(HARDWARE_REQUIREMENTS), extraSkills: "Lean Six Sigma Black Belt certificado; Certified IPC Specialist (IPC-J-STD-001 e IPC-A-610); SOLIDWORKS Professional (CSWP); Ingeniería Industrial (Universidad del Valle de México). Movilidad internacional: pasaporte vigente, visa de EE. UU. y e-visa de India (\"immediate readiness for global travel and site product transfers\") — buena señal para el requisito de viajes rotativos, aunque no menciona específicamente visa o experiencia con CMs en China. Inglés: \"Professional Working\" según su CV. Nota: aún no se ha agendado llamada de descubrimiento." },
         { name: "César Simón García Ferman", shortName: "César García", yearsExperience: 9, yearsPlus: true, linkedin: "https://www.linkedin.com/in/cesarsimon-garciaferman", zoho: "", age: "", location: "Guadalajara, Jalisco", seniority: "NPI Leader (Technical Lead & Testing Strategy) en Sanmina, Tlajomulco de Zúñiga (ago 2025–actualidad): anchor técnico para introducción de nuevos productos, liderando estrategia de testing end-to-end (ICT, funcional, validación a nivel sistema); desarrollo y mentoría de equipo de ingenieros de producto y test; optimización de yield mediante análisis de datos de test. Previamente Sr. New Product Introduction Engineer en Plexus Corp., Zapopan (feb–ago 2025): fases EVT/DVT/PVT para sistemas de hardware de alta complejidad, liaison técnico entre R&D y manufactura. NPI Product Engineer en Flex, Zapopan (dic 2020–feb 2025): ciclo de vida de testing/validación para 100+ productos, estandarización de procesos de test con sitios globales. Product Engineer Mgmt en Sanmina, Zapopan (feb 2018–nov 2020): ingeniería de sustentamiento y test operations, ICT y testing funcional. 9+ años de experiencia según su propio CV (\"9+ years of experience\"); nota: su trayectoria laboral de tiempo completo (feb 2018–actualidad) se traslapa en el CV con estudios de Licenciatura en Desarrollo de Sistemas Web (2020–2024) — posible inconsistencia de fechas a confirmar con el candidato.", tools: "NPI Hardware Testing (EVT/DVT/PVT), estrategia de ICT y test funcional, optimización de yield y cobertura de test, root cause analysis y debugging de hardware, desarrollo y validación de test plans, anchoring técnico cross-funcional, liderazgo y mentoría de equipos de ingeniería.", aiToolTags: [], languages: "No se menciona explícitamente un lenguaje de programación o scripting pese a su formación en Desarrollo de Sistemas Web (Programación); inglés avanzado según su propio perfil.", salary: "", checklist: emptyChecklist(HARDWARE_REQUIREMENTS), extraSkills: "Certified Associate in Project Management (CAPM), PMI (esperado 2026, en curso); Google Project Management Professional Certificate, Coursera (2025); B.S. en Desarrollo de Sistemas Web/Programación, Universidad de Guadalajara (2020–2024); Senior Data Scientist Certificate, Tecnológico de Monterrey (2024). Declara estar \"fully prepared for rotational, international deployments (e.g., China)\" — coincide directamente con el requisito de viajes/CMs en China, aunque a diferencia de otros candidatos no detalla estatus de pasaporte/visa. Nota: aún no se ha agendado llamada de descubrimiento." }
-      ]
+      ],
+      companies: HARDWARE_COMPANIES
     },
     bdr: {
       id: 'bdr',
@@ -447,7 +463,8 @@
           ]
         }
       },
-      candidates: []
+      candidates: [],
+      companies: BDR_COMPANIES
     }
   };
 
@@ -518,7 +535,16 @@
       companiesTitle: "Empresas con posiciones similares",
       companiesHint: "Vacantes de otras empresas para comparar responsabilidades, seniority y mercado",
       companiesEmptyTitle: "Aún no hay vacantes registradas",
-      companiesEmptyBody: "En cuanto agregues una fila en el Sheet de empresas, aparecerá aquí en la siguiente sincronización."
+      companiesEmptyBody: "En cuanto agregues una fila en el Sheet de empresas, aparecerá aquí en la siguiente sincronización.",
+      fieldCompany: "Empresa",
+      fieldJobTitle: "Título del anuncio",
+      fieldPlatform: "Plataforma",
+      fieldCompanyLocation: "Ubicación",
+      fieldSalaryReported: "Salario reportado",
+      fieldRequirements: "Requisitos clave",
+      fieldDateChecked: "Fecha de consulta",
+      fieldNotesCompany: "Notas",
+      viewListing: "Ver anuncio"
     },
     en: {
       updatedLabel: "Last updated: September 1, 2026",
@@ -566,7 +592,16 @@
       companiesTitle: "Companies with similar openings",
       companiesHint: "Other companies' postings to compare responsibilities, seniority, and market positioning",
       companiesEmptyTitle: "No postings logged yet",
-      companiesEmptyBody: "As soon as you add a row in the companies Sheet, it will show up here in the next sync."
+      companiesEmptyBody: "As soon as you add a row in the companies Sheet, it will show up here in the next sync.",
+      fieldCompany: "Company",
+      fieldJobTitle: "Posting title",
+      fieldPlatform: "Platform",
+      fieldCompanyLocation: "Location",
+      fieldSalaryReported: "Salary reported",
+      fieldRequirements: "Key requirements",
+      fieldDateChecked: "Date checked",
+      fieldNotesCompany: "Notes",
+      viewListing: "View listing"
     }
   };
 
@@ -660,6 +695,47 @@
       '</details>';
     }).join('');
     document.getElementById('candidatesList').innerHTML = html;
+  }
+
+  function renderCompanies(lang) {
+    var cfg = JD_CONFIGS[currentJD];
+    var t = translations[lang];
+    var companiesEl = document.getElementById('companiesList');
+    if (!companiesEl) return;
+
+    var companies = cfg.companies || [];
+    if (!companies.length) {
+      companiesEl.innerHTML = '<div class="empty-state accent-yellow"><strong>' + t.companiesEmptyTitle + '</strong><span>' + t.companiesEmptyBody + '</span></div>';
+      return;
+    }
+
+    var html = companies.map(function(co) {
+      var urlField = co.url && co.url.trim()
+        ? '<div class="field-value"><a href="' + co.url + '" target="_blank" rel="noopener">' + t.viewListing + '</a></div>'
+        : '<div class="field-value pending">' + t.pendingValue + '</div>';
+      return '<details class="candidate-card">' +
+        '<summary class="candidate-summary"><span>' + co.company + '</span><span class="chev">▾</span></summary>' +
+        '<div class="candidate-body"><div class="field-grid">' +
+          '<div><div class="field-label">' + t.fieldCompany + '</div>' + fieldOrPending(co.company, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldJobTitle + '</div>' + fieldOrPending(co.title, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldPlatform + '</div>' + fieldOrPending(co.platform, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldCompanyLocation + '</div>' + fieldOrPending(co.location, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldSalaryReported + '</div>' + fieldOrPending(co.salary, t) + '</div>' +
+          '<div><div class="field-label">' + t.fieldDateChecked + '</div>' + fieldOrPending(co.dateChecked, t) + '</div>' +
+          '<div><div class="field-label">' + t.viewListing + '</div>' + urlField + '</div>' +
+        '</div>' +
+        '<div class="extra-skills">' +
+          '<div class="field-label">' + t.fieldRequirements + '</div>' +
+          '<div class="field-value' + (co.requirements && co.requirements.trim() ? '' : ' pending') + '">' + (co.requirements && co.requirements.trim() ? co.requirements : t.pendingValue) + '</div>' +
+        '</div>' +
+        '<div class="extra-skills">' +
+          '<div class="field-label">' + t.fieldNotesCompany + '</div>' +
+          '<div class="field-value' + (co.notes && co.notes.trim() ? '' : ' pending') + '">' + (co.notes && co.notes.trim() ? co.notes : t.pendingValue) + '</div>' +
+        '</div>' +
+        '</div>' +
+      '</details>';
+    }).join('');
+    companiesEl.innerHTML = html;
   }
 
   function callsCompletedCount(cfg) {
@@ -846,6 +922,7 @@
     renderTimeline(lang);
     renderAnalysis(lang);
     renderCandidates(lang);
+    renderCompanies(lang);
   }
 
   function toggleLang() { currentLang = currentLang === 'es' ? 'en' : 'es'; applyLang(currentLang); }
