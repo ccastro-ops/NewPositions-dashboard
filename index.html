@@ -185,6 +185,36 @@
   .checklist-status.pending { color: var(--text-primary); background: var(--page-plane); }
   .extra-skills { margin-top: 14px; border-top: 1px solid var(--gridline); padding-top: 12px; }
   .extra-skills .field-value { font-size: 13px; }
+
+.rh-analysis{margin-top:2px}
+.rh-block{margin-bottom:26px}
+.rh-h{font-size:16px;font-weight:700;color:#322470;margin:0 0 6px}
+.rh-note{font-size:13px;color:#6b6152;margin:0 0 12px;line-height:1.5}
+.rh-svg{width:100%;height:auto;display:block;max-width:680px}
+.rh-svg .svg-bar{fill:#3B82C4}
+.rh-svg .svg-bar-muted{fill:#AEB7C2}
+.rh-svg .svg-bar-hi{fill:#EDCC4D}
+.rh-svg .svg-lbl{font-size:13px;fill:#4a3d2a}
+.rh-svg .svg-lbl-sm{font-size:11px;fill:#6b6152}
+.rh-svg .svg-val{font-size:13px;font-weight:700;fill:#322470}
+.rh-salstats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.rh-salstat{background:#F4F6FA;border-radius:10px;padding:10px 14px;min-width:120px;flex:1}
+.rh-salstat-v{font-size:18px;font-weight:800;color:#322470}
+.rh-salstat-l{font-size:10.5px;color:#6b6152;margin-top:2px;text-transform:uppercase;letter-spacing:.03em}
+.rh-grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:640px){.rh-grid2{grid-template-columns:1fr}}
+.rh-chips{display:flex;flex-direction:column;gap:8px}
+.rh-chip{display:flex;align-items:center;gap:10px;background:#F4F6FA;border-radius:8px;padding:8px 12px}
+.rh-chip-primary{background:#EAF2FB;box-shadow:inset 3px 0 0 #3B82C4}
+.rh-chip-name{font-weight:700;color:#2b2d33;font-size:14px}
+.rh-chip-n{font-weight:800;color:#322470;font-size:14px}
+.rh-chip-tag{margin-left:auto;font-size:10.5px;color:#6b6152;text-transform:uppercase;letter-spacing:.03em}
+.rh-list{margin:0;padding-left:18px}
+.rh-list li{font-size:14px;line-height:1.55;color:#3a3527;margin-bottom:7px}
+.rh-impl .rh-list li{margin-bottom:9px}
+.rh-meta{font-size:12px;color:#8a8378;line-height:1.5;margin-top:18px;border-top:1px solid #EDE6DC;padding-top:12px}
+.status-stats-grid.stats-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:640px){.status-stats-grid.stats-3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -514,23 +544,24 @@
       requirements: RH_REQUIREMENTS,
       overview: {
         title: { es: "Resumen de la vacante", en: "Role summary" },
-        hint: { es: "Investigación de mercado de vacantes comparables de Auxiliar de RH; la Job Description interna aún está por definirse", en: "Market research on comparable HR Assistant postings; the internal Job Description is still to be defined" },
+        hint: { es: "Investigación de mercado de vacantes de Auxiliar/Asistente de RH; la Job Description interna está en desarrollo", en: "Market research on HR Assistant postings; the internal Job Description is in development" },
         cardA: {
           tag: { es: "Investigación de mercado", en: "Market research" },
           bullets: [
-            { es: "Se recopilaron vacantes comparables de Auxiliar / Analista de Recursos Humanos en Mazatlán, Culiacán y la zona de Guadalajara (Jalisco), además de datos salariales agregados a nivel nacional (OCC, Indeed, Computrabajo).", en: "Comparable HR Assistant / Analyst postings were gathered in Mazatlán, Culiacán, and the Guadalajara area (Jalisco), plus national aggregate salary data (OCC, Indeed, Computrabajo)." },
-            { es: "El rango salarial de mercado observado va aproximadamente de $9,000 a $16,000 MXN/mes para perfiles de auxiliar/analista, con datos agregados que ubican el promedio nacional alrededor de $11,000 MXN/mes (Indeed).", en: "The observed market salary range runs roughly $9,000 to $16,000 MXN/month for assistant/analyst profiles, with aggregate data placing the national average around $11,000 MXN/month (Indeed)." },
-            { es: "Varios anuncios usan títulos cercanos (Analista de RH, Líder de RH, Reclutador, Auxiliar de Capacitación) más que el título exacto \"Auxiliar de RH\"; se incluyen como comparables de mercado, con notas de cada diferencia.", en: "Several postings use adjacent titles (HR Analyst, HR Lead, Recruiter, Training Assistant) rather than the exact \"HR Assistant\" title; they are included as market comparables, each with a note on the difference." }
+            { es: "Se analizaron 61 vacantes de Auxiliar/Asistente de Recursos Humanos publicadas en Glassdoor (México), filtradas de una búsqueda de 409 resultados; antes se consultaron también OCC, Indeed y Computrabajo.", en: "61 HR Assistant postings on Glassdoor (Mexico) were analyzed, filtered from a 409-result search; OCC, Indeed and Computrabajo were also consulted earlier." },
+            { es: "53 de las 61 vacantes publican salario (proporcionado por el empleador): la mediana es de $13,500 MXN/mes y el promedio de ~$13,800, concentrándose en el rango $12,000–$16,000.", en: "53 of 61 postings publish a salary (employer-provided): the median is $13,500 MXN/month and the average ~$13,800, concentrated in the $12,000–$16,000 range." },
+            { es: "La mayoría de los anuncios no especifican ciudad (48 aparecen solo como \"México\"); entre los que sí, Jalisco es la zona con más vacantes.", en: "Most postings do not specify a city (48 appear only as \"Mexico\"); among those that do, Jalisco leads." }
           ]
         },
         cardB: {
-          tag: { es: "Pendiente", en: "Pending" },
+          tag: { es: "En desarrollo", en: "In progress" },
           bullets: [
-            { es: "Job Description interna de Outpost aún por definir: falta confirmar responsabilidades exactas, nivel de inglés requerido y rango salarial objetivo.", en: "Outpost's internal Job Description is still to be defined: exact responsibilities, required English level, and target salary range are still to be confirmed." },
-            { es: "Aún no hay candidatos contactados para esta vacante; esta pestaña se irá llenando conforme se agreguen perfiles.", en: "No candidates have been contacted yet for this role; this tab will fill in as profiles are added." }
+            { es: "La Job Description interna de Outpost está en elaboración (borrador v1), a partir de las actividades del área y de lo que pide el mercado.", en: "Outpost's internal Job Description is being drafted (v1), based on the team's activities and market demand." },
+            { es: "No se están contactando candidatos para esta posición; el seguimiento es de mercado (análisis de vacantes).", en: "No candidates are being contacted for this role; tracking is market-based (vacancy analysis)." }
           ]
         }
       },
+      rhAnalysis: {"n": 61, "withSalary": 53, "median": 13500, "avg": 13803, "absMin": 8500, "absMax": 30000, "zonas": [{"label": "México (sin ciudad especificada)", "n": 48}, {"label": "Jalisco", "n": 4}, {"label": "Veracruz", "n": 3}, {"label": "Estado de México", "n": 2}, {"label": "Nayarit", "n": 1}, {"label": "Puebla", "n": 1}, {"label": "Oaxaca", "n": 1}, {"label": "Michoacán", "n": 1}], "salaryBuckets": [{"label": "< $10k", "n": 1}, {"label": "$10–12k", "n": 7}, {"label": "$12–14k", "n": 20}, {"label": "$14–16k", "n": 17}, {"label": "$16–18k", "n": 4}, {"label": "$18–20k", "n": 3}, {"label": "$20k+", "n": 1}], "fuentes": [{"label": "Glassdoor", "n": 61, "primary": true, "tag": {"es": "fuente principal", "en": "primary source"}}, {"label": "Computrabajo", "tag": {"es": "consultada", "en": "consulted"}}, {"label": "OCC", "tag": {"es": "consultada", "en": "consulted"}}, {"label": "Indeed", "tag": {"es": "consultada", "en": "consulted"}}], "requisitos": [{"es": "Licenciatura (trunca o concluida) en Administración, Psicología o Recursos Humanos.", "en": "Bachelor's (in progress or completed) in Business Administration, Psychology or HR."}, {"es": "1 a 2 años de experiencia en funciones administrativas de RH.", "en": "1–2 years of experience in HR administrative functions."}, {"es": "Office intermedio-avanzado; en el sector tecnológico, Google Workspace.", "en": "Intermediate-advanced Office; Google Workspace in the tech sector."}, {"es": "Reclutamiento y selección, control documental y apoyo en nómina/incidencias.", "en": "Recruiting and selection, document control, and payroll/incident support."}, {"es": "Inglés: rara vez requerido a nivel local (deseable cuando aparece).", "en": "English: rarely required locally (nice-to-have when it appears)."}], "implicaciones": [{"es": "El rango competitivo se movió al alza: la mediana de mercado es $13,500 y la mayoría paga $12,000–$16,000. Un objetivo de $13,000–$15,000 sería competitivo.", "en": "The competitive range moved up: the market median is $13,500 and most pay $12,000–$16,000. A $13,000–$15,000 target would be competitive."}, {"es": "Conviene publicar el salario en la vacante: 53 de 61 anuncios (87%) lo hacen, y todos son montos proporcionados por el empleador.", "en": "Publishing the salary is advisable: 53 of 61 postings (87%) do, all employer-provided figures."}, {"es": "Pedir inglés B2 como requisito esencial estaría por encima del mercado; dejarlo como deseable es lo consistente.", "en": "Requiring B2 English as essential would be above market; keeping it as nice-to-have is consistent."}, {"es": "\"Licenciatura afín + 1–2 años\" es el estándar del mercado y un filtro razonable.", "en": "\"Related degree + 1–2 years\" is the market standard and a reasonable filter."}, {"es": "La oferta local en Mazatlán/Sinaloa es limitada; la mayor densidad de vacantes con ciudad definida está en Jalisco.", "en": "Local supply in Mazatlán/Sinaloa is limited; the highest density of city-specified vacancies is in Jalisco."}]},
       candidates: [],
       companies: RH_COMPANIES
     }
@@ -558,7 +589,7 @@
 
   var translations = {
     es: {
-      updatedLabel: "Última actualización: 22 de septiembre, 2026",
+      updatedLabel: "Última actualización: 23 de septiembre, 2026",
       themeToggle: "Cambiar tema",
       statStatusLabel: "Estado del proyecto",
       statStatusHint: "JD en borrador, aún sin validar con el mercado",
@@ -613,22 +644,27 @@
       fieldDateChecked: "Fecha de consulta",
       fieldNotesCompany: "Notas",
       viewListing: "Ver anuncio",
-      vacancyStatTotalLabel: "Vacantes de mercado encontradas",
-      vacancyStatPlatformsLabel: "Fuentes / plataformas distintas",
-      vacancyAnalysisTotalLabel: "Total de vacantes de mercado registradas",
-      vacancyAnalysisByPlatform: "Vacantes por fuente",
-      vacancyAnalysisLocations: "Ubicaciones de las vacantes",
-      vacancyAnalysisSalaryLabel: "Rango salarial de las vacantes (MXN, donde se publica)",
-      vacancyAnalysisSalaryNote: "Aproximado, a partir de {n} vacante(s) con salario numérico publicado; mezcla montos exactos de anuncios y promedios reportados por las fuentes.",
-      vacancyAnalysisSalaryEmpty: "Ninguna vacante con salario numérico publicado",
-      companiesTitleVacancy: "Vacantes de mercado encontradas",
-      companiesHintVacancy: "Vacantes de Auxiliar de RH detectadas en distintas fuentes de empleo (OCC, Indeed, Computrabajo, Glassdoor) para investigación de mercado",
-      statStatusHintVacancy: "JD en desarrollo — seguimiento de vacantes de mercado; por ahora no se están contactando candidatos para esta posición",
-      analysisTitleVacancy: "Resumen de mercado",
-      analysisHintVacancy: "Resumen automático de las vacantes de mercado encontradas para esta posición"
+      statContactedLabelAlt: "",
+      statStatusHintVacancy: "JD en desarrollo — análisis de mercado de vacantes; por ahora no se contactan candidatos para esta posición",
+      rhStatAnalyzed: "Vacantes analizadas",
+      rhStatWithSalary: "Con salario publicado",
+      rhStatMedian: "Mediana salarial (MXN)",
+      rhZonasTitle: "Vacantes por zona geográfica",
+      rhZonasNote: "La mayoría de los anuncios no especifican ciudad (aparecen solo como \"México\"). Entre los que sí, Jalisco concentra la mayor cantidad.",
+      rhSalaryTitle: "Rango salarial",
+      rhMedian: "Mediana",
+      rhAvg: "Promedio",
+      rhRange: "Rango publicado",
+      rhSalaryNote: "Distribución por punto medio del salario publicado ({ws} de {n} vacantes). Las barras resaltadas marcan el rango con mayor concentración.",
+      rhFuentesTitle: "Fuentes consultadas",
+      rhReqTitle: "Requisitos más solicitados",
+      rhImplTitle: "Implicaciones para la Job Description",
+      rhMeta: "Muestra de 61 vacantes de Auxiliar/Asistente de RH filtradas de una búsqueda de 409 en Glassdoor (México), 23 de septiembre de 2026. 53 publican salario (todos proporcionados por el empleador); 8 sin salario. 48 anuncios no especifican ciudad. Los requisitos son una síntesis de los anuncios con descripción detallada revisados, no de las 61 tarjetas.",
+      analysisTitleVacancy: "Análisis de mercado — Auxiliar / Asistente de RH",
+      analysisHintVacancy: "Análisis de las vacantes de Auxiliar/Asistente de Recursos Humanos recopiladas en el mercado"
     },
     en: {
-      updatedLabel: "Last updated: September 22, 2026",
+      updatedLabel: "Last updated: September 23, 2026",
       themeToggle: "Toggle theme",
       statStatusLabel: "Project status",
       statStatusHint: "JD in draft, not yet validated with the market",
@@ -683,19 +719,24 @@
       fieldDateChecked: "Date checked",
       fieldNotesCompany: "Notes",
       viewListing: "View listing",
-      vacancyStatTotalLabel: "Market vacancies found",
-      vacancyStatPlatformsLabel: "Distinct sources / platforms",
-      vacancyAnalysisTotalLabel: "Total market vacancies logged",
-      vacancyAnalysisByPlatform: "Vacancies by source",
-      vacancyAnalysisLocations: "Vacancy locations",
-      vacancyAnalysisSalaryLabel: "Vacancy salary range (MXN, where published)",
-      vacancyAnalysisSalaryNote: "Approximate, from {n} vacancy(ies) with a numeric published salary; mixes exact posting amounts with source-reported averages.",
-      vacancyAnalysisSalaryEmpty: "No vacancy with a numeric published salary",
-      companiesTitleVacancy: "Market vacancies found",
-      companiesHintVacancy: "HR Assistant vacancies detected across job sources (OCC, Indeed, Computrabajo, Glassdoor) for market research",
-      statStatusHintVacancy: "JD in development — tracking market vacancies; no candidates are being contacted for this role right now",
-      analysisTitleVacancy: "Market summary",
-      analysisHintVacancy: "Automatic summary of the market vacancies found for this role"
+      statContactedLabelAlt: "",
+      statStatusHintVacancy: "JD in development — market analysis of vacancies; no candidates are being contacted for this role right now",
+      rhStatAnalyzed: "Vacancies analyzed",
+      rhStatWithSalary: "With published salary",
+      rhStatMedian: "Median salary (MXN)",
+      rhZonasTitle: "Vacancies by geographic area",
+      rhZonasNote: "Most postings do not specify a city (they show only as \"Mexico\"). Among those that do, Jalisco leads.",
+      rhSalaryTitle: "Salary range",
+      rhMedian: "Median",
+      rhAvg: "Average",
+      rhRange: "Published range",
+      rhSalaryNote: "Distribution by midpoint of the published salary ({ws} of {n} vacancies). Highlighted bars mark the range with the highest concentration.",
+      rhFuentesTitle: "Sources consulted",
+      rhReqTitle: "Most requested requirements",
+      rhImplTitle: "Implications for the Job Description",
+      rhMeta: "Sample of 61 HR Assistant postings filtered from a 409-result Glassdoor (Mexico) search, September 23, 2026. 53 publish a salary (all employer-provided); 8 without salary. 48 postings do not specify a city. Requirements are a synthesis of the postings with detailed descriptions reviewed, not of the 61 cards.",
+      analysisTitleVacancy: "Market analysis — HR Assistant",
+      analysisHintVacancy: "Analysis of the HR Assistant vacancies collected from the market"
     }
   };
 
@@ -861,12 +902,12 @@
     }).join('');
 
     var statsGridHtml;
-    if (cfg.vacancyMode) {
-      var vacT = cfg.companies || [];
-      var vacPlatforms = uniqueNonEmpty(vacT.map(function(co) { return (co.platform || '').replace(/\s*\(dato agregado\)/i, '').trim(); }));
-      statsGridHtml = '<div class="status-stats-grid">' +
-        '<div class="stat-tile accent-blue"><div class="stat-label">' + t.vacancyStatTotalLabel + '</div><div class="stat-value">' + vacT.length + '</div></div>' +
-        '<div class="stat-tile accent-brown"><div class="stat-label">' + t.vacancyStatPlatformsLabel + '</div><div class="stat-value">' + vacPlatforms.length + '</div></div>' +
+    if (cfg.vacancyMode && cfg.rhAnalysis) {
+      var a = cfg.rhAnalysis;
+      statsGridHtml = '<div class="status-stats-grid stats-3">' +
+        '<div class="stat-tile accent-blue"><div class="stat-label">' + t.rhStatAnalyzed + '</div><div class="stat-value">' + a.n + '</div></div>' +
+        '<div class="stat-tile accent-brown"><div class="stat-label">' + t.rhStatWithSalary + '</div><div class="stat-value">' + a.withSalary + '</div></div>' +
+        '<div class="stat-tile accent-yellow"><div class="stat-label">' + t.rhStatMedian + '</div><div class="stat-value">$' + a.median.toLocaleString('es-MX') + '</div></div>' +
       '</div>';
     } else {
       statsGridHtml = '<div class="status-stats-grid">' +
@@ -959,42 +1000,77 @@
     return { text: (min === max ? (min + unit(min)) : (min + ' – ' + max + unit(max))), n: values.length };
   }
 
-  function renderVacancyAnalysis(lang, cfg) {
-    var t = translations[lang];
-    var vac = cfg.companies || [];
-    var total = vac.length;
-    var platFreq = {};
-    vac.forEach(function(co) { var p = (co.platform || '').replace(/\s*\(dato agregado\)/i, '').trim() || '—'; platFreq[p] = (platFreq[p] || 0) + 1; });
-    var platRows = Object.keys(platFreq).sort(function(a, b) { return platFreq[b] - platFreq[a] || a.localeCompare(b); }).map(function(p) {
-      var pct = total ? (platFreq[p] / total * 100) : 0;
-      return '<div class="mode-row"><div class="mode-row-label">' + p + ' (' + platFreq[p] + ')</div><div class="mode-bar"><div class="mode-seg good" style="width:' + pct + '%"></div></div></div>';
+  function rhEsc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  function rhSvgHBar(items) {
+    var max = Math.max.apply(null, items.map(function(i) { return i.n; })) || 1;
+    var rowH = 26, gap = 11, padL = 250, padR = 46, W = 680;
+    var H = items.length * (rowH + gap) + 6;
+    var body = items.map(function(it, i) {
+      var y = i * (rowH + gap) + 4;
+      var w = (it.n / max) * (W - padL - padR);
+      return '<text x="' + (padL - 10) + '" y="' + (y + rowH / 2 + 4) + '" text-anchor="end" class="svg-lbl">' + rhEsc(it.label) + '</text>' +
+        '<rect x="' + padL + '" y="' + y + '" width="' + Math.max(w, 2) + '" height="' + rowH + '" rx="4" class="svg-bar' + (it.muted ? ' svg-bar-muted' : '') + '"/>' +
+        '<text x="' + (padL + Math.max(w, 2) + 8) + '" y="' + (y + rowH / 2 + 4) + '" class="svg-val">' + it.n + '</text>';
     }).join('');
-    var locations = uniqueNonEmpty(vac.map(function(co) { return co.location; }));
-    var locationsValue = locations.length ? chipList(locations) : ('<span class="field-value pending">' + t.pendingValue + '</span>');
-    var salVals = vac.map(function(co) { return parseSalaryAmount(co.salary); }).filter(function(v) { return v !== null; });
-    var salaryValue;
-    if (salVals.length) {
-      var smin = Math.min.apply(null, salVals), smax = Math.max.apply(null, salVals);
-      var sfmt = function(n) { return '$' + n.toLocaleString('es-MX'); };
-      salaryValue = (smin === smax ? sfmt(smin) + ' MXN' : sfmt(smin) + ' – ' + sfmt(smax) + ' MXN') +
-        '<div class="mode-row-count" style="margin-top:4px;">' + t.vacancyAnalysisSalaryNote.replace('{n}', salVals.length) + '</div>';
-    } else { salaryValue = t.vacancyAnalysisSalaryEmpty; }
-    var html = '<div class="analysis-item"><div class="field-label">' + t.vacancyAnalysisTotalLabel + '</div><div class="field-value">' + total + '</div></div>' +
-      '<div class="analysis-block" style="margin-top:16px;">' +
-        '<div class="field-label" style="margin-bottom:10px;">' + t.vacancyAnalysisByPlatform + '</div>' +
-        '<div class="mode-chart">' + platRows + '</div>' +
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" class="rh-svg" preserveAspectRatio="xMidYMid meet" role="img">' + body + '</svg>';
+  }
+
+  function rhSvgVBars(items) {
+    var max = Math.max.apply(null, items.map(function(i) { return i.n; })) || 1;
+    var W = 680, H = 250, padB = 46, padT = 22, padL = 20, padR = 20;
+    var n = items.length, step = (W - padL - padR) / n, bw = step * 0.62;
+    var body = items.map(function(it, i) {
+      var x = padL + i * step + (step - bw) / 2;
+      var h = (it.n / max) * (H - padB - padT);
+      var y = H - padB - h;
+      return '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + Math.max(h, 1) + '" rx="3" class="svg-bar' + (it.hi ? ' svg-bar-hi' : '') + '"/>' +
+        '<text x="' + (x + bw / 2) + '" y="' + (y - 6) + '" text-anchor="middle" class="svg-val">' + (it.n || '') + '</text>' +
+        '<text x="' + (x + bw / 2) + '" y="' + (H - padB + 18) + '" text-anchor="middle" class="svg-lbl-sm">' + rhEsc(it.label) + '</text>';
+    }).join('');
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" class="rh-svg" preserveAspectRatio="xMidYMid meet" role="img">' + body + '</svg>';
+  }
+
+  function renderRHAnalysis(lang, cfg) {
+    var t = translations[lang];
+    var a = cfg.rhAnalysis;
+    var fmt = function(x) { return '$' + Number(x).toLocaleString('es-MX'); };
+    var zonas = a.zonas.map(function(z) { return { label: z.label, n: z.n, muted: /sin ciudad|not specify|Mexico|México/i.test(z.label) && z.n === Math.max.apply(null, a.zonas.map(function(q){return q.n;})) }; });
+    var zonasSvg = rhSvgHBar(zonas);
+    var _sortedN = a.salaryBuckets.map(function(b) { return b.n; }).sort(function(x, y) { return y - x; });
+    var _thresh = _sortedN.length > 1 ? _sortedN[1] : _sortedN[0];
+    var buckets = a.salaryBuckets.map(function(b) { return { label: b.label, n: b.n, hi: b.n > 0 && b.n >= _thresh }; });
+    var salSvg = rhSvgVBars(buckets);
+    var fuentes = a.fuentes.map(function(f) {
+      return '<div class="rh-chip' + (f.primary ? ' rh-chip-primary' : '') + '">' +
+        '<span class="rh-chip-name">' + rhEsc(f.label) + '</span>' +
+        (f.n ? '<span class="rh-chip-n">' + f.n + '</span>' : '') +
+        '<span class="rh-chip-tag">' + rhEsc(f.tag[lang]) + '</span></div>';
+    }).join('');
+    var req = a.requisitos.map(function(r) { return '<li>' + rhEsc(r[lang]) + '</li>'; }).join('');
+    var imp = a.implicaciones.map(function(r) { return '<li>' + rhEsc(r[lang]) + '</li>'; }).join('');
+    var html = '<div class="rh-analysis">' +
+      '<div class="rh-block"><h3 class="rh-h">' + t.rhZonasTitle + '</h3><p class="rh-note">' + t.rhZonasNote + '</p>' + zonasSvg + '</div>' +
+      '<div class="rh-block"><h3 class="rh-h">' + t.rhSalaryTitle + '</h3>' +
+        '<div class="rh-salstats">' +
+          '<div class="rh-salstat"><div class="rh-salstat-v">' + fmt(a.median) + '</div><div class="rh-salstat-l">' + t.rhMedian + '</div></div>' +
+          '<div class="rh-salstat"><div class="rh-salstat-v">' + fmt(a.avg) + '</div><div class="rh-salstat-l">' + t.rhAvg + '</div></div>' +
+          '<div class="rh-salstat"><div class="rh-salstat-v">' + fmt(a.absMin) + '–' + fmt(a.absMax) + '</div><div class="rh-salstat-l">' + t.rhRange + '</div></div>' +
+        '</div>' + salSvg +
+        '<p class="rh-note">' + t.rhSalaryNote.replace('{ws}', a.withSalary).replace('{n}', a.n) + '</p></div>' +
+      '<div class="rh-grid2">' +
+        '<div class="rh-block"><h3 class="rh-h">' + t.rhFuentesTitle + '</h3><div class="rh-chips">' + fuentes + '</div></div>' +
+        '<div class="rh-block"><h3 class="rh-h">' + t.rhReqTitle + '</h3><ul class="rh-list">' + req + '</ul></div>' +
       '</div>' +
-      '<div class="analysis-grid" style="margin-top:20px;">' +
-        '<div class="analysis-item"><div class="field-label">' + t.vacancyAnalysisLocations + '</div>' + locationsValue + '</div>' +
-        '<div class="analysis-item"><div class="field-label">' + t.vacancyAnalysisSalaryLabel + '</div><div class="field-value' + (salVals.length ? '' : ' pending') + '">' + salaryValue + '</div></div>' +
-      '</div>';
+      '<div class="rh-block rh-impl"><h3 class="rh-h">' + t.rhImplTitle + '</h3><ul class="rh-list">' + imp + '</ul></div>' +
+      '<p class="rh-meta">' + t.rhMeta + '</p></div>';
     document.getElementById('analysisCard').innerHTML = html;
   }
 
   function renderAnalysis(lang) {
     var cfg = JD_CONFIGS[currentJD];
     var t = translations[lang];
-    if (cfg.vacancyMode) { renderVacancyAnalysis(lang, cfg); return; }
+    if (cfg.vacancyMode) { if (cfg.rhAnalysis) { renderRHAnalysis(lang, cfg); } return; }
     var total = cfg.candidates.length;
 
     if (!total) {
@@ -1070,13 +1146,16 @@
     renderCandidates(lang);
     renderCompanies(lang);
 
+    var compListEl = document.getElementById('companiesList');
+    var compSection = compListEl ? compListEl.closest('section') : null;
     if (cfg.vacancyMode) {
+      if (compSection) compSection.style.display = 'none';
       var ov = function(sel, val) { var el = document.querySelector(sel); if (el && val !== undefined) el.textContent = val; };
-      ov('[data-i18n="companiesTitle"]', translations[lang].companiesTitleVacancy);
-      ov('[data-i18n="companiesHint"]', translations[lang].companiesHintVacancy);
       ov('[data-i18n="statStatusHint"]', translations[lang].statStatusHintVacancy);
       ov('[data-i18n="analysisTitle"]', translations[lang].analysisTitleVacancy);
       ov('[data-i18n="analysisHint"]', translations[lang].analysisHintVacancy);
+    } else if (compSection) {
+      compSection.style.display = '';
     }
   }
 
