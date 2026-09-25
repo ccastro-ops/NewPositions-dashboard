@@ -215,6 +215,35 @@
 .rh-meta{font-size:12px;color:#8a8378;line-height:1.5;margin-top:18px;border-top:1px solid #EDE6DC;padding-top:12px}
 .status-stats-grid.stats-3{grid-template-columns:repeat(3,1fr)}
 @media(max-width:640px){.status-stats-grid.stats-3{grid-template-columns:1fr}}
+
+/* Home + at-a-glance + charts (Frente 1) */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:6px}
+.pcard{background:#fff;border:1px solid #E9E0D6;border-radius:14px;padding:18px 18px 44px;cursor:pointer;transition:.12s;position:relative;overflow:hidden}
+.pcard:hover{border-color:#322470;transform:translateY(-2px)}
+.pbar{position:absolute;left:0;top:0;bottom:0;width:5px}
+.ph3{margin:0 0 8px;font-size:17px;color:#141018}
+.ptag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-bottom:10px}
+.ptag.cand{background:#EAF2FB;color:#215a94}.ptag.mkt{background:#F0EAF7;color:#4b2e86}
+.pstat{display:flex;gap:20px;margin:6px 0 10px}
+.pstat .pv{font-size:22px;font-weight:800;color:#322470;line-height:1}
+.pstat .pl{font-size:11px;color:#6b6152;margin-top:3px}
+.pmeta{display:flex;align-items:baseline;gap:8px;font-size:12.5px;margin:3px 0}
+.pmeta .pml{color:#6b6152;min-width:92px}.pmeta .pmv{color:#141018;font-weight:600}
+.pstep{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#6b6152;border-top:1px solid #E9E0D6;padding-top:10px;margin-top:11px}
+.pstep .ppill{background:#E5DBD1;color:#623F1B;font-weight:700;border-radius:20px;padding:2px 9px;font-size:11px}
+.pgo{position:absolute;right:16px;bottom:14px;color:#322470;font-weight:700;font-size:13px}
+.ag-name{font-weight:700}
+.ag-wrap{display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap;margin-left:12px}
+.ag-chip{font-size:12px;padding:3px 9px;border-radius:20px;font-weight:600;white-space:nowrap}
+.ag-chip.ag-lvl{background:#EFEAF7;color:#4b2e86}
+.ag-chip.ag-sal{background:#EAF3EE;color:#1f6f45}
+.ag-chip.ag-loc{background:#F3EEE7;color:#6b4a26}
+.ag-chip.ag-pend{background:#F2F2F2;color:#8a8378}
+.ag-rate{display:inline-flex;gap:3px;margin-left:2px}
+.ag-dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.ag-g{background:#2E9E5B}.ag-a{background:#E0A82E}.ag-r{background:#BB240A}
+.candidate-summary{display:flex;align-items:center;flex-wrap:wrap}
+.rh-svg .svg-bar-g{fill:#2E9E5B}
 </style>
 </head>
 <body>
@@ -234,6 +263,9 @@
 
   <div class="tab-bar" id="tabBar"></div>
 
+  <div id="homeView"></div>
+
+  <div id="positionView">
   <section>
     <h2 class="accent-red"><span data-i18n="statStatusLabel"></span></h2>
     <p class="section-hint" data-i18n="statStatusHint"></p>
@@ -266,6 +298,7 @@
 
     <div id="companiesList"></div>
   </section>
+  </div>
 
 
 </div>
@@ -411,6 +444,19 @@
     { company: "Vela Gas", title: "Auxiliar de Recursos Humanos", platform: "Glassdoor", location: "El Salto, Jalisco", salary: "$10,000–$12,000 MXN/mes (según Glassdoor)", requirements: "Experiencia en RH requerida (según fragmento visible); empresa del sector de gas LP", url: "https://www.glassdoor.com.mx/Empleo/guadalajara-auxiliar-de-recursos-humanos-empleos-SRCH_IL.0,11_IC3486357_KO12,40.htm", dateChecked: "18/09/2026", notes: "Publicado hace 26 días. Dato extraído del listado de resultados de Glassdoor, no del anuncio individual completo. El enlace apunta al listado de resultados de Glassdoor (Guadalajara), no al anuncio individual." },
     { company: "Teknei", title: "Auxiliar de RH", platform: "Glassdoor", location: "Guadalajara, Jalisco", salary: "$11,000–$15,000 MXN/mes (según Glassdoor)", requirements: "Conocimiento de finiquitos, liquidaciones y terminaciones (según fragmento visible)", url: "https://www.glassdoor.com.mx/Empleo/guadalajara-auxiliar-de-recursos-humanos-empleos-SRCH_IL.0,11_IC3486357_KO12,40.htm", dateChecked: "18/09/2026", notes: "Publicación de más de 30 días — posiblemente ya no vigente. Dato extraído del listado de resultados de Glassdoor, no del anuncio individual completo. El enlace apunta al listado de resultados de Glassdoor (Guadalajara), no al anuncio individual." },
     { company: "Grupo Papel Oro", title: "Auxiliar de RH", platform: "Glassdoor", location: "Zapopan, Jalisco", salary: "$12,000 a $13,500 mensual", requirements: "Escolaridad mínima: Licenciatura en Áreas Administrativas, Trabajo social, Psicología o afín (trunca o terminada); buen manejo de paquetería Office; conocimiento en fuentes de reclutamiento; manejo de Canva; habilidades de comunicación", url: "https://www.glassdoor.com.mx/Empleo/guadalajara-auxiliar-de-recursos-humanos-empleos-SRCH_IL.0,11_IC3486357_KO12,40.htm", dateChecked: "18/09/2026", notes: "Responsabilidades: publicación de vacantes, revisión de currículums, entrevistas presenciales y telefónicas, seguimiento a procesos de selección (psicométricos, referencias, informes, documentos de ingreso), firmas de contrato, supervisión del personal del CEDIS. Prestaciones: descuentos y precios preferenciales, teléfono de la empresa, vacaciones adicionales o permisos con goce de sueldo. El enlace apunta al listado de resultados de Glassdoor (Guadalajara), no al anuncio individual." }
+  ];
+
+  var SCM_REQUIREMENTS = [
+    { key: "ingles", es: "Inglés avanzado (B2+) para clientes, auditores y equipo internacional", en: "Advanced English (B2+) for clients, auditors, and the international team" },
+    { key: "soc2", es: "Experiencia directa llevando una empresa por auditoría SOC 2 (Type 2 preferido)", en: "Direct experience taking a company through a SOC 2 audit (Type 2 preferred)" },
+    { key: "drata", es: "Administración hands-on de Drata (o GRC comparable: Vanta, Secureframe)", en: "Hands-on administration of Drata (or comparable GRC: Vanta, Secureframe)" },
+    { key: "kaseya", es: "Administración hands-on de Kaseya (o RMM comparable): endpoints, parches, EDR, cifrado", en: "Hands-on administration of Kaseya (or comparable RMM): endpoints, patching, EDR, encryption" },
+    { key: "frameworks", es: "Marcos de seguridad, control de acceso y respuesta a incidentes", en: "Security frameworks, access control, and incident response" },
+    { key: "politicas", es: "Redacción de políticas y respuesta a cuestionarios de seguridad de clientes", en: "Writing policies and responding to client security questionnaires" },
+    { key: "comunicacion", es: "Comunicación escrita/verbal, precisión y atención al detalle", en: "Written/verbal communication, accuracy, and attention to detail" },
+    { key: "autonomia", es: "Autonomía para conducir el programa (reporta al CEO)", en: "Autonomy to drive the program (reports to the CEO)" },
+    { key: "certificacion", es: "Deseable: certificación (Security+, CISA, ISO 27001 LI/LA)", en: "Nice-to-have: certification (Security+, CISA, ISO 27001 LI/LA)" },
+    { key: "backgroundQA", es: "Deseable: background en QA, software services o MSP", en: "Nice-to-have: background in QA, software services, or MSP" }
   ];
 
   var JD_CONFIGS = {
@@ -564,11 +610,35 @@
       rhAnalysis: {"n": 61, "withSalary": 53, "median": 13500, "avg": 13803, "absMin": 8500, "absMax": 30000, "zonas": [{"label": "México (sin ciudad especificada)", "n": 48}, {"label": "Jalisco", "n": 4}, {"label": "Veracruz", "n": 3}, {"label": "Estado de México", "n": 2}, {"label": "Nayarit", "n": 1}, {"label": "Puebla", "n": 1}, {"label": "Oaxaca", "n": 1}, {"label": "Michoacán", "n": 1}], "salaryBuckets": [{"label": "< $10k", "n": 1}, {"label": "$10–12k", "n": 7}, {"label": "$12–14k", "n": 20}, {"label": "$14–16k", "n": 17}, {"label": "$16–18k", "n": 4}, {"label": "$18–20k", "n": 3}, {"label": "$20k+", "n": 1}], "fuentes": [{"label": "Glassdoor", "n": 61, "primary": true, "tag": {"es": "fuente principal", "en": "primary source"}}, {"label": "Computrabajo", "tag": {"es": "consultada", "en": "consulted"}}, {"label": "OCC", "tag": {"es": "consultada", "en": "consulted"}}, {"label": "Indeed", "tag": {"es": "consultada", "en": "consulted"}}], "requisitos": [{"es": "Licenciatura (trunca o concluida) en Administración, Psicología o Recursos Humanos.", "en": "Bachelor's (in progress or completed) in Business Administration, Psychology or HR."}, {"es": "1 a 2 años de experiencia en funciones administrativas de RH.", "en": "1–2 years of experience in HR administrative functions."}, {"es": "Office intermedio-avanzado; en el sector tecnológico, Google Workspace.", "en": "Intermediate-advanced Office; Google Workspace in the tech sector."}, {"es": "Reclutamiento y selección, control documental y apoyo en nómina/incidencias.", "en": "Recruiting and selection, document control, and payroll/incident support."}, {"es": "Inglés: rara vez requerido a nivel local (deseable cuando aparece).", "en": "English: rarely required locally (nice-to-have when it appears)."}], "implicaciones": [{"es": "El rango competitivo se movió al alza: la mediana de mercado es $13,500 y la mayoría paga $12,000–$16,000. Un objetivo de $13,000–$15,000 sería competitivo.", "en": "The competitive range moved up: the market median is $13,500 and most pay $12,000–$16,000. A $13,000–$15,000 target would be competitive."}, {"es": "Conviene publicar el salario en la vacante: 53 de 61 anuncios (87%) lo hacen, y todos son montos proporcionados por el empleador.", "en": "Publishing the salary is advisable: 53 of 61 postings (87%) do, all employer-provided figures."}, {"es": "Pedir inglés B2 como requisito esencial estaría por encima del mercado; dejarlo como deseable es lo consistente.", "en": "Requiring B2 English as essential would be above market; keeping it as nice-to-have is consistent."}, {"es": "\"Licenciatura afín + 1–2 años\" es el estándar del mercado y un filtro razonable.", "en": "\"Related degree + 1–2 years\" is the market standard and a reasonable filter."}, {"es": "La oferta local en Mazatlán/Sinaloa es limitada; la mayor densidad de vacantes con ciudad definida está en Jalisco.", "en": "Local supply in Mazatlán/Sinaloa is limited; the highest density of city-specified vacancies is in Jalisco."}]},
       candidates: [],
       companies: RH_COMPANIES
+    },
+    scm: {
+      id: 'scm',
+      tabLabel: { es: "Security & Compliance Mgr", en: "Security & Compliance Mgr" },
+      title: { es: "Security & Compliance Manager — Outpost QA", en: "Security & Compliance Manager — Outpost QA" },
+      subtitle: { es: "Seguimiento del proyecto: investigación de mercado para el rol de Security & Compliance Manager (remoto; SOC 2, Drata, Kaseya)", en: "Project tracker: market research for the Security & Compliance Manager role (remote; SOC 2, Drata, Kaseya)" },
+      hasSeniorityLevels: false, seniorityLevels: [],
+      seniorityLabel: { es: "Rango de años de experiencia", en: "Years of experience range" },
+      currentStepIndex: 0, vacancyMode: true, requirements: SCM_REQUIREMENTS,
+      overview: {
+        title: { es: "Resumen de la vacante", en: "Role summary" },
+        hint: { es: "Investigación de mercado de roles similares; el reclutamiento está por comenzar", en: "Market research on similar roles; recruiting is about to start" },
+        cardA: { tag: { es: "Investigación de mercado", en: "Market research" }, bullets: [
+          { es: "Se analizaron 12 vacantes de roles equivalentes (Security/Compliance/GRC/Seguridad de la Información Manager) en Glassdoor y Computrabajo. Es un rol niche y senior en México.", en: "12 vacancies for equivalent roles (Security/Compliance/GRC/Information Security Manager) were analyzed on Glassdoor and Computrabajo. It's a niche, senior role in Mexico." },
+          { es: "El grueso está en CDMX y remoto; en Sinaloa hay presencia en Culiacán, casi toda de Zucarmex. Salarios altos: de $25k a $90k cuando se publican.", en: "The bulk is in Mexico City and remote; Sinaloa has presence in Culiacán, almost all from Zucarmex. High salaries: $25k to $90k when published." }
+        ] },
+        cardB: { tag: { es: "En desarrollo", en: "In progress" }, bullets: [
+          { es: "Checklist de evaluación y guía de entrevista ya definidos (kit del rol). Aún no se contactan candidatos.", en: "Evaluation checklist and interview guide already defined (role kit). No candidates contacted yet." },
+          { es: "Búsqueda recomendada por herramienta (Drata, Kaseya, SOC 2) más que por título exacto.", en: "Recommended search by tool (Drata, Kaseya, SOC 2) rather than by exact title." }
+        ] }
+      },
+      rhAnalysis: {"n": 12, "withSalary": 2, "median": 51250, "avg": 51250, "absMin": 25000, "absMax": 90000, "zonas": [{"label": "México (sin especificar)", "n": 5}, {"label": "Sinaloa (Culiacán)", "n": 4}, {"label": "CDMX", "n": 2}, {"label": "Jalisco (Guadalajara)", "n": 1}], "salaryBuckets": [{"label": "< $30k", "n": 1}, {"label": "$30–50k", "n": 0}, {"label": "$50–70k", "n": 0}, {"label": "$70–90k", "n": 1}, {"label": "$90k+", "n": 0}], "fuentes": [{"label": "Glassdoor", "n": 8, "primary": true, "tag": {"es": "fuente principal", "en": "primary source"}}, {"label": "Computrabajo", "n": 4, "tag": {"es": "Sinaloa", "en": "Sinaloa"}}, {"label": "OCC", "tag": {"es": "consultada", "en": "consulted"}}, {"label": "Indeed", "tag": {"es": "consultada", "en": "consulted"}}], "byCompany": [{"label": "Zucarmex (Culiacán)", "n": 3}, {"label": "No especificada", "n": 9}], "zonasNote": {"es": "Rol muy nacional/remoto: la mayoría no especifica ciudad o está en CDMX. En Sinaloa hay presencia (Culiacán), casi toda de una sola empresa (Zucarmex).", "en": "Very national/remote role: most don't specify a city or are in Mexico City. Sinaloa has some presence (Culiacán), almost all from one company (Zucarmex)."}, "salaryNote": {"es": "Solo {ws} de {n} vacantes publican salario, por eso la muestra es limitada; los montos observados van de $25k a $90k según el nivel.", "en": "Only {ws} of {n} vacancies publish a salary, so the sample is limited; observed amounts range from $25k to $90k depending on level."}, "meta": {"es": "Muestra de 12 vacantes de roles similares (Security / Compliance / GRC / Seguridad de la Información Manager) en Glassdoor y Computrabajo, 24 de septiembre de 2026. Rol niche: pocos usan el título exacto y solo 2 publican salario. Búsqueda estricta; fuentes pendientes: OCC, Indeed, LinkedIn y Google Jobs.", "en": "Sample of 12 vacancies for similar roles (Security / Compliance / GRC / Information Security Manager) on Glassdoor and Computrabajo, September 24, 2026. Niche role: few use the exact title and only 2 publish a salary. Strict search; pending sources: OCC, Indeed, LinkedIn, and Google Jobs."}, "requisitos": [{"es": "SOC 2 Type 2: experiencia directa llevando la auditoría de una empresa.", "en": "SOC 2 Type 2: direct experience running a company's audit."}, {"es": "Drata (o GRC comparable: Vanta, Secureframe): administración hands-on.", "en": "Drata (or comparable GRC: Vanta, Secureframe): hands-on administration."}, {"es": "Kaseya (o RMM comparable): endpoints, parches, EDR, cifrado.", "en": "Kaseya (or comparable RMM): endpoints, patching, EDR, encryption."}, {"es": "Inglés avanzado (B2+) para clientes, auditores y equipo internacional.", "en": "Advanced English (B2+) for clients, auditors, and international team."}, {"es": "Redacción de políticas y respuesta a cuestionarios de seguridad de clientes.", "en": "Writing policies and answering client security questionnaires."}, {"es": "Respuesta a incidentes y conocimiento de marcos de seguridad.", "en": "Incident response and knowledge of security frameworks."}], "implicaciones": [{"es": "Rol niche y senior: casi nadie usa el título exacto; los equivalentes son Gerente/Jefe/Coordinador de Seguridad de la Información, Ciberseguridad o GRC.", "en": "Niche, senior role: almost nobody uses the exact title; equivalents are Information Security, Cybersecurity or GRC Manager/Lead/Coordinator."}, {"es": "Bien pagado: los pocos anuncios con salario van de $25k (Jefe en Guadalajara) a $60–90k (Gerente de TI/Ciberseguridad).", "en": "Well paid: the few postings with a salary range from $25k (Lead in Guadalajara) to $60–90k (IT/Cybersecurity Manager)."}, {"es": "Concentrado en CDMX y remoto; en Sinaloa hay presencia en Culiacán (Zucarmex).", "en": "Concentrated in Mexico City and remote; Sinaloa has presence in Culiacán (Zucarmex)."}, {"es": "Como la JD de Outpost es remota, conviene buscar a nivel nacional y por herramienta (Drata, Kaseya, SOC 2) más que por título.", "en": "Since Outpost's JD is remote, search nationally and by tool (Drata, Kaseya, SOC 2) rather than by title."}]},
+      candidates: [],
+      companies: []
     }
   };
 
-  var currentJD = 'sdet';
-  var JD_ORDER = ['sdet', 'hardware', 'bdr', 'rh'];
+  var currentJD = 'home';
+  var JD_ORDER = ['sdet', 'hardware', 'bdr', 'rh', 'scm'];
 
   function statusInfo(raw) {
     var v = (raw || "").trim().toLowerCase();
@@ -592,6 +662,18 @@
       updatedLabel: "Última actualización: 23 de septiembre, 2026",
       themeToggle: "Cambiar tema",
       statStatusLabel: "Estado del proyecto",
+      homeTab: "🏠 Inicio",
+      homeTitle: "Recruiting Dashboard — Outpost QA",
+      homeSubtitle: "Seguimiento de posiciones abiertas: candidatos, llamadas e investigación de mercado.",
+      homeTagCand: "Candidatos", homeTagMarket: "Investigación de mercado",
+      homeCandidates: "Candidatos", homeCalls: "Llamadas", homeVacancies: "Vacantes", homeMedian: "Mediana salarial",
+      homeSalary: "Rango salarial", homeCities: "Ciudades top", homeStep: "Paso", homeOpen: "Abrir →",
+      chartSalaryByLoc: "Salario promedio por ubicación",
+      chartSalaryByLocNote: "Responde \"¿cuesta más contratar en cierta ciudad?\". Se recalcula con los candidatos.",
+      chartSalaryEmpty: "Aún sin salarios capturados.",
+      chartCandByLoc: "Candidatos por ubicación", chartCallStatus: "Estado de las llamadas",
+      chartDone: "Con llamada", chartPending: "Pendientes", chartSalRange: "Rango salarial",
+      rhByCompanyTitle: "Vacantes por empresa",
       statStatusHint: "JD en borrador, aún sin validar con el mercado",
       statContactedLabel: "Perfiles de LinkedIn contactados",
       statCallsLabel: "Llamadas completadas",
@@ -667,6 +749,18 @@
       updatedLabel: "Last updated: September 23, 2026",
       themeToggle: "Toggle theme",
       statStatusLabel: "Project status",
+      homeTab: "🏠 Home",
+      homeTitle: "Recruiting Dashboard — Outpost QA",
+      homeSubtitle: "Open positions tracker: candidates, calls, and market research.",
+      homeTagCand: "Candidates", homeTagMarket: "Market research",
+      homeCandidates: "Candidates", homeCalls: "Calls", homeVacancies: "Vacancies", homeMedian: "Median salary",
+      homeSalary: "Salary range", homeCities: "Top cities", homeStep: "Step", homeOpen: "Open →",
+      chartSalaryByLoc: "Average salary by location",
+      chartSalaryByLocNote: "Answers \"does it cost more to hire in a given city?\". Recomputes from candidates.",
+      chartSalaryEmpty: "No salaries captured yet.",
+      chartCandByLoc: "Candidates by location", chartCallStatus: "Call status",
+      chartDone: "With call", chartPending: "Pending", chartSalRange: "Salary range",
+      rhByCompanyTitle: "Vacancies by company",
       statStatusHint: "JD in draft, not yet validated with the market",
       statContactedLabel: "LinkedIn profiles contacted",
       statCallsLabel: "Calls completed",
@@ -748,7 +842,8 @@
   }
 
   function renderTabs(lang) {
-    var html = JD_ORDER.map(function(id) {
+    var homeTab = '<button class="tab-btn' + (currentJD === 'home' ? ' active' : '') + '" onclick="switchJD(\'home\')">' + translations[lang].homeTab + '</button>';
+    var html = homeTab + JD_ORDER.map(function(id) {
       var cfg = JD_CONFIGS[id];
       return '<button class="tab-btn' + (id === currentJD ? ' active' : '') + '" onclick="switchJD(\'' + id + '\')">' + cfg.tabLabel[lang] + '</button>';
     }).join('');
@@ -808,7 +903,7 @@
         ? '<div class="field-value"><a href="' + c.linkedin + '" target="_blank" rel="noopener">' + t.viewProfile + '</a></div>'
         : '<div class="field-value pending">' + t.pendingValue + '</div>';
       return '<details class="candidate-card">' +
-        '<summary class="candidate-summary"><span>' + nameHtml + badgeHtml + '</span><span class="chev">▾</span></summary>' +
+        '<summary class="candidate-summary"><span class="ag-name">' + nameHtml + '</span>' + atAGlance(c, cfg, lang) + '<span class="chev" style="margin-left:auto">▾</span></summary>' +
         '<div class="candidate-body"><div class="field-grid">' +
           '<div><div class="field-label">' + t.fieldName + '</div><div class="field-value">' + c.name + '</div></div>' +
           '<div><div class="field-label">' + t.fieldHeadline + '</div>' + linkedinField + '</div>' +
@@ -1010,8 +1105,8 @@
       var y = i * (rowH + gap) + 4;
       var w = (it.n / max) * (W - padL - padR);
       return '<text x="' + (padL - 10) + '" y="' + (y + rowH / 2 + 4) + '" text-anchor="end" class="svg-lbl">' + rhEsc(it.label) + '</text>' +
-        '<rect x="' + padL + '" y="' + y + '" width="' + Math.max(w, 2) + '" height="' + rowH + '" rx="4" class="svg-bar' + (it.muted ? ' svg-bar-muted' : '') + '"/>' +
-        '<text x="' + (padL + Math.max(w, 2) + 8) + '" y="' + (y + rowH / 2 + 4) + '" class="svg-val">' + it.n + '</text>';
+        '<rect x="' + padL + '" y="' + y + '" width="' + Math.max(w, 2) + '" height="' + rowH + '" rx="4" class="svg-bar' + (it.muted ? ' svg-bar-muted' : '') + (it.g ? ' svg-bar-g' : '') + '"/>' +
+        '<text x="' + (padL + Math.max(w, 2) + 8) + '" y="' + (y + rowH / 2 + 4) + '" class="svg-val">' + (it.disp != null ? it.disp : it.n) + '</text>';
     }).join('');
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" class="rh-svg" preserveAspectRatio="xMidYMid meet" role="img">' + body + '</svg>';
   }
@@ -1050,20 +1145,21 @@
     var req = a.requisitos.map(function(r) { return '<li>' + rhEsc(r[lang]) + '</li>'; }).join('');
     var imp = a.implicaciones.map(function(r) { return '<li>' + rhEsc(r[lang]) + '</li>'; }).join('');
     var html = '<div class="rh-analysis">' +
-      '<div class="rh-block"><h3 class="rh-h">' + t.rhZonasTitle + '</h3><p class="rh-note">' + t.rhZonasNote + '</p>' + zonasSvg + '</div>' +
+      '<div class="rh-block"><h3 class="rh-h">' + t.rhZonasTitle + '</h3><p class="rh-note">' + (a.zonasNote ? a.zonasNote[lang] : t.rhZonasNote) + '</p>' + zonasSvg + '</div>' +
       '<div class="rh-block"><h3 class="rh-h">' + t.rhSalaryTitle + '</h3>' +
         '<div class="rh-salstats">' +
           '<div class="rh-salstat"><div class="rh-salstat-v">' + fmt(a.median) + '</div><div class="rh-salstat-l">' + t.rhMedian + '</div></div>' +
           '<div class="rh-salstat"><div class="rh-salstat-v">' + fmt(a.avg) + '</div><div class="rh-salstat-l">' + t.rhAvg + '</div></div>' +
           '<div class="rh-salstat"><div class="rh-salstat-v">' + fmt(a.absMin) + '–' + fmt(a.absMax) + '</div><div class="rh-salstat-l">' + t.rhRange + '</div></div>' +
         '</div>' + salSvg +
-        '<p class="rh-note">' + t.rhSalaryNote.replace('{ws}', a.withSalary).replace('{n}', a.n) + '</p></div>' +
+        '<p class="rh-note">' + (a.salaryNote ? a.salaryNote[lang] : t.rhSalaryNote).replace('{ws}', a.withSalary).replace('{n}', a.n) + '</p></div>' +
       '<div class="rh-grid2">' +
         '<div class="rh-block"><h3 class="rh-h">' + t.rhFuentesTitle + '</h3><div class="rh-chips">' + fuentes + '</div></div>' +
         '<div class="rh-block"><h3 class="rh-h">' + t.rhReqTitle + '</h3><ul class="rh-list">' + req + '</ul></div>' +
       '</div>' +
+      (a.byCompany ? '<div class="rh-block"><h3 class="rh-h">' + t.rhByCompanyTitle + '</h3>' + rhSvgHBar(a.byCompany.map(function(x){return {label:x.label,n:x.n,muted:/no especific|not specified/i.test(x.label)};})) + '</div>' : '') +
       '<div class="rh-block rh-impl"><h3 class="rh-h">' + t.rhImplTitle + '</h3><ul class="rh-list">' + imp + '</ul></div>' +
-      '<p class="rh-meta">' + t.rhMeta + '</p></div>';
+      '<p class="rh-meta">' + (a.meta ? a.meta[lang] : t.rhMeta) + '</p></div>';
     document.getElementById('analysisCard').innerHTML = html;
   }
 
@@ -1078,68 +1174,111 @@
       return;
     }
 
-    var withDetail = callsCompletedCount(cfg);
-    var locations = uniqueNonEmpty(cfg.candidates.map(function(c) { return c.location; }));
-    var tools = topTools(6, cfg);
-    var salaryRange = salaryRangeText(cfg);
+    renderCandidateCharts(lang, cfg);
+  }
 
-    var withLevel = cfg.candidates.filter(function(c) { return typeof c.yearsExperience === 'number'; });
-    var yearsLabelFor = function(c) {
-      return (c.yearsApprox ? '~' : '') + c.yearsExperience + (c.yearsPlus ? '+' : '') + (lang === 'es' ? (c.yearsExperience === 1 ? ' año' : ' años') : (c.yearsExperience === 1 ? ' yr' : ' yrs'));
-    };
-    var seniorityRangeText = '';
-    if (withLevel.length) {
-      var minC = withLevel.reduce(function(a, b) { return b.yearsExperience < a.yearsExperience ? b : a; });
-      var maxC = withLevel.reduce(function(a, b) { return b.yearsExperience > a.yearsExperience ? b : a; });
-      if (cfg.hasSeniorityLevels) {
-        var minText = seniorityLevel(minC.yearsExperience, cfg) + ' (' + yearsLabelFor(minC) + ')';
-        var maxText = seniorityLevel(maxC.yearsExperience, cfg) + ' (' + yearsLabelFor(maxC) + ')';
-        seniorityRangeText = minC === maxC ? minText : minText + ' – ' + maxText;
-      } else {
-        seniorityRangeText = minC === maxC ? yearsLabelFor(minC) : yearsLabelFor(minC) + ' – ' + yearsLabelFor(maxC);
-      }
+
+  var HOME_COLORS = { sdet:'#BB240A', hardware:'#322470', bdr:'#623F1B', rh:'#2E9E5B', scm:'#E0A82E' };
+  function shortMoney(n){ if(n==null) return null; return n>=1000 ? ('$'+Math.round(n/1000)+'k') : ('$'+n); }
+  function homeSalaryRange(cfg){
+    if(cfg.vacancyMode && cfg.rhAnalysis){ return {min:cfg.rhAnalysis.absMin, max:cfg.rhAnalysis.absMax}; }
+    var vals=(cfg.candidates||[]).map(function(c){return parseSalaryAmount(c.salary);}).filter(function(v){return v!=null;});
+    if(!vals.length) return null; return {min:Math.min.apply(null,vals), max:Math.max.apply(null,vals)};
+  }
+  function homeTopCities(cfg){
+    if(cfg.vacancyMode && cfg.rhAnalysis){ return cfg.rhAnalysis.zonas.slice(0,3).map(function(z){return z.label.replace(/\s*\(.*/,'').replace(/M[eé]xico \(sin especificar\)/,'México');}).join(' · '); }
+    var freq={}; (cfg.candidates||[]).forEach(function(c){ var city=((c.location||'').split(',')[0].trim()); if(city){freq[city]=(freq[city]||0)+1;} });
+    var keys=Object.keys(freq).sort(function(a,b){return freq[b]-freq[a];}).slice(0,3);
+    return keys.length ? keys.join(' · ') : '—';
+  }
+  function renderHome(lang){
+    var t=translations[lang];
+    var cards=JD_ORDER.map(function(id){
+      var cfg=JD_CONFIGS[id]; var mkt=!!cfg.vacancyMode; var s1,l1,s2,l2;
+      if(mkt){ var a=cfg.rhAnalysis||{}; s1=a.n||0; l1=t.homeVacancies; s2=a.median?('$'+Math.round(a.median/1000)+'k'):'—'; l2=t.homeMedian; }
+      else { s1=(cfg.candidates||[]).length; l1=t.homeCandidates; s2=callsCompletedCount(cfg); l2=t.homeCalls; }
+      var sr=homeSalaryRange(cfg); var srTxt=sr?(shortMoney(sr.min)+'–'+shortMoney(sr.max)):'—';
+      var cities=homeTopCities(cfg);
+      var color=HOME_COLORS[id]||'#322470'; var step=(cfg.currentStepIndex||0)+1;
+      var statusL=PROJECT_STEPS[cfg.currentStepIndex]?PROJECT_STEPS[cfg.currentStepIndex][lang]:'';
+      return '<div class="pcard" onclick="switchJD(\''+id+'\')">'+
+        '<span class="pbar" style="background:'+color+'"></span>'+
+        '<span class="ptag '+(mkt?'mkt':'cand')+'">'+(mkt?t.homeTagMarket:t.homeTagCand)+'</span>'+
+        '<h3 class="ph3">'+cfg.tabLabel[lang]+'</h3>'+
+        '<div class="pstat"><div><div class="pv">'+s1+'</div><div class="pl">'+l1+'</div></div>'+
+          '<div><div class="pv">'+s2+'</div><div class="pl">'+l2+'</div></div></div>'+
+        '<div class="pmeta"><span class="pml">'+t.homeSalary+'</span><span class="pmv">'+srTxt+'</span></div>'+
+        '<div class="pmeta"><span class="pml">'+t.homeCities+'</span><span class="pmv">'+cities+'</span></div>'+
+        '<div class="pstep"><span class="ppill">'+t.homeStep+' '+step+'/5</span> '+statusL+'</div>'+
+        '<span class="pgo">'+t.homeOpen+'</span></div>';
+    }).join('');
+    document.getElementById('homeView').innerHTML='<div class="home-grid">'+cards+'</div>';
+  }
+  function shortSalaryTxt(c){ var v=parseSalaryAmount(c.salary); return v!=null?('$'+Math.round(v/1000)+'k'):null; }
+  function candLevelTxt(c, lang){
+    var m=(c.name||'').match(/\bL[1-3]\b/); if(m) return m[0];
+    var s=(c.seniority||''); var sm=s.match(/\b(Principal|Senior|Semi[- ]?senior|Junior|Mid|Lead)\b/i); if(sm) return sm[0];
+    if(typeof c.yearsExperience==='number'){ return (c.yearsApprox?'~':'')+c.yearsExperience+(c.yearsPlus?'+':'')+(lang==='es'?' años':' yrs'); }
+    return null;
+  }
+  function ratingDotsHtml(c, cfg){
+    if(!hasCallData(c,cfg)) return '';
+    var v=0,a=0,r=0; cfg.requirements.forEach(function(it){ var s=statusInfo(c.checklist[it.key]); if(s==='good')v++; else if(s==='warning')a++; else if(s==='critical')r++; });
+    var d=''; var i; for(i=0;i<v;i++)d+='<span class="ag-dot ag-g"></span>'; for(i=0;i<a;i++)d+='<span class="ag-dot ag-a"></span>'; for(i=0;i<r;i++)d+='<span class="ag-dot ag-r"></span>';
+    return d?'<span class="ag-rate" title="verde / amarillo / rojo">'+d+'</span>':'';
+  }
+  function atAGlance(c, cfg, lang){
+    var t=translations[lang];
+    if(!hasCallData(c,cfg)){
+      var lp=(c.location&&c.location.trim())?'<span class="ag-chip ag-loc">'+rhEsc(c.location)+'</span>':'';
+      return '<span class="ag-wrap"><span class="ag-chip ag-pend">'+t.candidateBadgePending+'</span>'+lp+'</span>';
     }
-
-    var toolsValue = tools.length
-      ? tools.map(function(x) { return x.tag + ' (' + x.count + ')'; }).join(', ')
-      : t.pendingValue;
-    var locationsValue = locations.length ? chipList(locations) : ('<span class="field-value pending">' + t.pendingValue + '</span>');
-    var seniorityValue = seniorityRangeText ? ('<div class="field-value">' + seniorityRangeText + '</div>') : ('<span class="field-value pending">' + t.pendingValue + '</span>');
-    var salaryValue = salaryRange
-      ? salaryRange.text + '<div class="mode-row-count" style="margin-top:4px;">' + t.salaryRangeNote.replace('{n}', salaryRange.n) + '</div>'
-      : t.salaryRangeEmpty;
-
-    var ageRange = ageRangeText(lang, cfg);
-    var ageValue = ageRange
-      ? ageRange.text + '<div class="mode-row-count" style="margin-top:4px;">' + t.ageRangeNote.replace('{n}', ageRange.n) + '</div>'
-      : t.ageRangeEmpty;
-
-    var html = '<div class="analysis-item"><div class="field-label">' + t.analysisProgress + '</div><div class="field-value">' + withDetail + ' / ' + total + '</div></div>' +
-      '<div class="analysis-block" style="margin-top:16px;">' +
-        '<div class="field-label" style="margin-bottom:10px;">' + t.analysisModeTitle.replace('{n}', total) + '</div>' +
-        renderModeChart(lang, cfg) +
-      '</div>' +
-      '<div class="analysis-grid" style="margin-top:20px;">' +
-        '<div class="analysis-item"><div class="field-label">' + t.analysisTools + '</div><div class="field-value' + (tools.length ? '' : ' pending') + '">' + toolsValue + '</div></div>' +
-        '<div class="analysis-item"><div class="field-label">' + t.analysisLocations + '</div>' + locationsValue + '</div>' +
-        '<div class="analysis-item"><div class="field-label">' + cfg.seniorityLabel[lang] + '</div>' + seniorityValue + '</div>' +
-        '<div class="analysis-item"><div class="field-label">' + t.analysisAge + '</div><div class="field-value' + (ageRange ? '' : ' pending') + '">' + ageValue + '</div></div>' +
-        '<div class="analysis-item"><div class="field-label">' + t.analysisSalary + '</div><div class="field-value' + (salaryRange ? '' : ' pending') + '">' + salaryValue + '</div></div>' +
-      '</div>';
-    document.getElementById('analysisCard').innerHTML = html;
+    var lvl=candLevelTxt(c,lang); var sal=shortSalaryTxt(c); var chips='';
+    if(lvl) chips+='<span class="ag-chip ag-lvl">'+rhEsc(lvl)+'</span>';
+    if(sal) chips+='<span class="ag-chip ag-sal">'+sal+'/mes</span>';
+    if(c.location&&c.location.trim()) chips+='<span class="ag-chip ag-loc">'+rhEsc(c.location)+'</span>';
+    return '<span class="ag-wrap">'+chips+ratingDotsHtml(c,cfg)+'</span>';
+  }
+  function renderCandidateCharts(lang, cfg){
+    var t=translations[lang]; var cands=cfg.candidates; var total=cands.length; var done=callsCompletedCount(cfg);
+    var byLoc={};
+    cands.forEach(function(c){ var v=parseSalaryAmount(c.salary); if(v==null) return; var city=((c.location||'').split(',')[0].trim())||'—'; (byLoc[city]=byLoc[city]||[]).push(v); });
+    var salItems=Object.keys(byLoc).map(function(k){ var arr=byLoc[k]; var avg=Math.round(arr.reduce(function(x,y){return x+y;},0)/arr.length); return {label:k,n:avg,disp:'$'+Math.round(avg/1000)+'k'}; }).sort(function(a,b){return b.n-a.n;});
+    var lc={}; cands.forEach(function(c){ var city=((c.location||'').split(',')[0].trim())||'—'; lc[city]=(lc[city]||0)+1; });
+    var locItems=Object.keys(lc).map(function(k){return {label:k,n:lc[k]};}).sort(function(a,b){return b.n-a.n;});
+    var svals=cands.map(function(c){return parseSalaryAmount(c.salary);}).filter(function(v){return v!=null;}).sort(function(a,b){return a-b;});
+    var srTxt=svals.length?('$'+Number(svals[0]).toLocaleString('es-MX')+' – $'+Number(svals[svals.length-1]).toLocaleString('es-MX')):'—';
+    function box(title,note,svg){ return '<div class="rh-block"><h3 class="rh-h">'+title+'</h3>'+(note?'<p class="rh-note">'+note+'</p>':'')+svg+'</div>'; }
+    var stats='<div class="rh-salstats">'+
+      '<div class="rh-salstat"><div class="rh-salstat-v">'+total+'</div><div class="rh-salstat-l">'+t.homeCandidates+'</div></div>'+
+      '<div class="rh-salstat"><div class="rh-salstat-v">'+done+'</div><div class="rh-salstat-l">'+t.chartDone+'</div></div>'+
+      '<div class="rh-salstat"><div class="rh-salstat-v">'+srTxt+'</div><div class="rh-salstat-l">'+t.chartSalRange+'</div></div>'+
+    '</div>';
+    var salChart=salItems.length?box(t.chartSalaryByLoc,t.chartSalaryByLocNote,rhSvgHBar(salItems)):'<div class="rh-block"><h3 class="rh-h">'+t.chartSalaryByLoc+'</h3><p class="rh-note">'+t.chartSalaryEmpty+'</p></div>';
+    var locChart=locItems.length?box(t.chartCandByLoc,'',rhSvgHBar(locItems)):'';
+    var callChart=box(t.chartCallStatus,'',rhSvgHBar([{label:t.chartDone,n:done,disp:done,g:true},{label:t.chartPending,n:total-done,disp:total-done}]));
+    document.getElementById('analysisCard').innerHTML='<div class="rh-analysis">'+stats+salChart+'<div class="rh-grid2">'+locChart+callChart+'</div></div>';
   }
 
   function applyLang(lang) {
-    var cfg = JD_CONFIGS[currentJD];
     document.querySelectorAll('[data-i18n]').forEach(function(el) {
       var key = el.getAttribute('data-i18n');
       if (translations[lang][key] !== undefined) el.textContent = translations[lang][key];
     });
     document.getElementById('langBtn').textContent = lang === 'es' ? 'English' : 'Español';
     document.documentElement.setAttribute('lang', lang);
+    renderTabs(lang);
+    var homeEl=document.getElementById('homeView'), posEl=document.getElementById('positionView');
+    if (currentJD === 'home' || !JD_CONFIGS[currentJD]) {
+      if(homeEl) homeEl.style.display=''; if(posEl) posEl.style.display='none';
+      document.getElementById('jdTitleEl').textContent = translations[lang].homeTitle;
+      document.getElementById('jdSubtitleEl').textContent = translations[lang].homeSubtitle;
+      renderHome(lang); window.scrollTo(0,0); return;
+    }
+    if(homeEl) homeEl.style.display='none'; if(posEl) posEl.style.display='';
+    var cfg = JD_CONFIGS[currentJD];
     document.getElementById('jdTitleEl').textContent = cfg.title[lang];
     document.getElementById('jdSubtitleEl').textContent = cfg.subtitle[lang];
-    renderTabs(lang);
     renderOverview(lang);
     renderTimeline(lang);
     renderAnalysis(lang);
