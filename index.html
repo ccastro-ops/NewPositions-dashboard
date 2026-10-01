@@ -244,6 +244,14 @@
 .ag-g{background:#2E9E5B}.ag-a{background:#E0A82E}.ag-r{background:#BB240A}
 .candidate-summary{display:flex;align-items:center;flex-wrap:wrap}
 .rh-svg .svg-bar-g{fill:#2E9E5B}
+.rh-subh{font-size:13px;font-weight:700;color:#4a3d2a;margin:0 0 6px}
+.market-sep{margin-top:30px;border-top:2px solid #E9E0D6;padding-top:20px}
+.rh-note a{color:#2E7CC4;font-weight:600}
+.eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:28px}
+@media(max-width:640px){.eval-grid{grid-template-columns:1fr}}
+.eval-col{background:#F4F6FA;border-radius:12px;padding:14px 18px}
+.eval-col .rh-list li{margin-bottom:9px}
+.eval-jd{background:#FFF7E6;box-shadow:inset 3px 0 0 #E8A72C}
 </style>
 </head>
 <body>
@@ -324,8 +332,8 @@
   var PROJECT_STEPS = [
     { key: "marketResearch", es: "Investigación de mercado", en: "Market research" },
     { key: "marketResearchClosed", es: "Investigación cerrada", en: "Market research closed" },
-    { key: "workingJD", es: "Trabajando en Job Description", en: "Working on Job Description" },
-    { key: "salaryDetermined", es: "Rango salarial determinado", en: "Salary range determined" },
+    { key: "workingJD", es: "Análisis de mercado", en: "Market analysis" },
+    { key: "salaryDetermined", es: "Nueva Job Description y rango salarial", en: "New Job Description & salary range" },
     { key: "positionFinalized", es: "Posición finalizada", en: "Position finalized" }
   ];
 
@@ -468,7 +476,7 @@
       hasSeniorityLevels: true,
       seniorityLevels: SDET_SENIORITY_LEVELS,
       seniorityLabel: { es: "Nivel de seniority (L1–L3 según años de experiencia)", en: "Seniority level (L1–L3 by years of experience)" },
-      currentStepIndex: 0,
+      currentStepIndex: 2,
       requirements: SDET_REQUIREMENTS,
       overview: {
         title: { es: "Evolución de la Job Description", en: "Job Description evolution" },
@@ -496,7 +504,8 @@
         }
       },
       candidates: SDET_CANDIDATES,
-      companies: SDET_COMPANIES
+      companies: SDET_COMPANIES,
+      marketAnalysis: {"n": 73, "withSalary": 13, "median": 60000, "avg": 55577, "absMin": 32500, "absMax": 80000, "remote": 19, "ai": 5, "zonas": [{"label": "México (sin especificar)", "n": 27}, {"label": "Remoto", "n": 19}, {"label": "CDMX / Zona Metro", "n": 17}, {"label": "Jalisco (Guadalajara)", "n": 7}, {"label": "Puebla", "n": 2}, {"label": "Toluca", "n": 1}], "salaryBuckets": [{"label": "< $40k", "n": 2}, {"label": "$40–50k", "n": 3}, {"label": "$50–60k", "n": 1}, {"label": "$60–70k", "n": 4}, {"label": "$70–80k", "n": 1}, {"label": "$80k+", "n": 2}], "topComp": [{"label": "Capgemini", "n": 12}, {"label": "EPAM Systems", "n": 7}, {"label": "Smart Payment Services", "n": 4}, {"label": "TripleTen", "n": 3}, {"label": "Capital Empresarial Horizonte", "n": 3}, {"label": "Xideral", "n": 3}, {"label": "Nagarro", "n": 2}], "note": {"es": "73 vacantes de SDET / QA Automation detectadas en Glassdoor México (sep 2026). Mayoría remota y dominada por consultoras de TI; solo 13 publican salario. El ángulo de IA aún es incipiente (5 de 73).", "en": "73 SDET / QA Automation vacancies found on Glassdoor Mexico (Sep 2026). Mostly remote and dominated by IT consultancies; only 13 publish a salary. The AI angle is still emerging (5 of 73)."},"conclusion":{"es": ["Pipeline (16 candidatos): mediana $50k y mayoría nivel L3; el talento local de Mazatlán es más económico que el mercado.", "Mercado (73 vacantes): mediana $60k, mayoritariamente remoto y dominado por consultoras de TI (Capgemini, EPAM). El enfoque de IA aún es poco común (5 de 73).", "En conjunto, nuestros candidatos están en o por debajo del mercado: una oferta competitiva es viable, y el enfoque en IA nos diferencia."], "en": ["Pipeline (16 candidates): median $50k and mostly L3; local Mazatlán talent is cheaper than the market.", "Market (73 vacancies): median $60k, mostly remote and dominated by IT consultancies (Capgemini, EPAM). The AI angle is still uncommon (5 of 73).", "Together, our candidates sit at or below the market: a competitive offer is feasible, and the AI focus differentiates us."]},"jdAdjustments":{"es": ["Fijar un rango salarial de $45,000–$70,000 MXN/mes (alineado al mercado); para talento de Mazatlán, la parte baja.", "Ofrecer modalidad remota o híbrida: el mercado es mayoritariamente remoto.", "Replantear el requisito de IA: priorizar disposición a aprender testing con IA sobre experiencia ya consolidada (escasa en el mercado).", "Mantener el nivel senior (6+ años / L3): el mercado es senior-heavy.", "Resaltar proyecto y cultura como diferenciador frente a las grandes consultoras."], "en": ["Set a salary range of $45,000–$70,000 MXN/month (market-aligned); for Mazatlán talent, the lower end.", "Offer remote or hybrid: the market is mostly remote.", "Rethink the AI requirement: prioritize willingness to learn AI testing over established experience (scarce in the market).", "Keep the senior level (6+ years / L3): the market is senior-heavy.", "Highlight project and culture as a differentiator vs. the big consultancies."]}}
     },
     hardware: {
       id: 'hardware',
@@ -680,6 +689,12 @@
       chartCandByLoc: "Candidatos por ubicación", chartCallStatus: "Estado de las llamadas",
       chartDone: "Con llamada", chartPending: "Pendientes", chartSalRange: "Rango salarial",
       rhByCompanyTitle: "Vacantes por empresa",
+      marketTitle: "Análisis de mercado — SDET / QA Automation (México)",
+      marketDbLink: "Ver base de datos de vacantes →",
+      marketVacancies: "Vacantes de mercado", marketRemote: "Remotas",
+      marketSalTitle: "Rango salarial del mercado", marketTopEmp: "Top empleadores",
+      marketCandVs: "Nuestros candidatos vs. mercado", marketMedLabel: "Mediana mercado",
+      chartLevels: "Nivel de candidatos", evalConcl: "Conclusión — candidatos y mercado", evalJd: "Ajustes recomendados a la Job Description",
       statStatusHint: "JD en borrador, aún sin validar con el mercado",
       statContactedLabel: "Perfiles de LinkedIn contactados",
       statCallsLabel: "Llamadas completadas",
@@ -767,6 +782,12 @@
       chartCandByLoc: "Candidates by location", chartCallStatus: "Call status",
       chartDone: "With call", chartPending: "Pending", chartSalRange: "Salary range",
       rhByCompanyTitle: "Vacancies by company",
+      marketTitle: "Market analysis — SDET / QA Automation (Mexico)",
+      marketDbLink: "View vacancies database →",
+      marketVacancies: "Market vacancies", marketRemote: "Remote",
+      marketSalTitle: "Market salary range", marketTopEmp: "Top employers",
+      marketCandVs: "Our candidates vs. market", marketMedLabel: "Market median",
+      chartLevels: "Candidate levels", evalConcl: "Conclusion — candidates & market", evalJd: "Recommended Job Description adjustments",
       statStatusHint: "JD in draft, not yet validated with the market",
       statContactedLabel: "LinkedIn profiles contacted",
       statCallsLabel: "Calls completed",
@@ -1247,25 +1268,89 @@
     if(c.location&&c.location.trim()) chips+='<span class="ag-chip ag-loc">'+rhEsc(c.location)+'</span>';
     return '<span class="ag-wrap">'+chips+ratingDotsHtml(c,cfg)+'</span>';
   }
+  function rhSvgCandMarket(items, median, medLabel) {
+    var maxv = Math.max(median * 1.12, Math.max.apply(null, items.map(function(i){return i.n;}))) || 1;
+    var rowH = 18, gap = 6, padL = 130, padR = 60, W = 680, top = 22;
+    var H = items.length * (rowH + gap) + top + 8, plotW = W - padL - padR;
+    var body = items.map(function(it, i) {
+      var y = top + i * (rowH + gap), w = (it.n / maxv) * plotW;
+      return '<text x="' + (padL - 7) + '" y="' + (y + rowH/2 + 4) + '" text-anchor="end" class="svg-lbl-sm">' + rhEsc(it.label) + '</text>' +
+        '<rect x="' + padL + '" y="' + y + '" width="' + Math.max(w,2) + '" height="' + rowH + '" rx="3" class="' + (it.g ? 'svg-bar-g' : 'svg-bar') + '"/>' +
+        '<text x="' + (padL + Math.max(w,2) + 6) + '" y="' + (y + rowH/2 + 4) + '" class="svg-val" style="font-size:10.5px">' + it.disp + '</text>';
+    }).join('');
+    var mx = padL + (median / maxv) * plotW;
+    var ref = '<line x1="' + mx + '" y1="14" x2="' + mx + '" y2="' + (H - 4) + '" stroke="#E8A72C" stroke-width="2" stroke-dasharray="5,4"/>' +
+      '<text x="' + (mx + 5) + '" y="12" class="svg-val" style="fill:#E8A72C;font-size:10px">' + medLabel + '</text>';
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" class="rh-svg" preserveAspectRatio="xMidYMid meet" role="img">' + ref + body + '</svg>';
+  }
+  function rhSvgDonut(items){
+    items=items.filter(function(i){return i.n>0;});
+    var total=items.reduce(function(s,i){return s+i.n;},0)||1;
+    var pal=['#2E7CC4','#1F2A5A','#E8A72C','#8FBEE6','#2E9E5B','#BB240A','#AEB7C2','#C9A227'];
+    var cx=92,cy=96,r=76,ri=47,W=460,H=200,ang=-Math.PI/2;
+    function pol(rr,a){return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)];}
+    var paths='';
+    if(items.length===1){
+      paths='<circle cx="'+cx+'" cy="'+cy+'" r="'+((r+ri)/2)+'" fill="none" stroke="'+(items[0].color||pal[0])+'" stroke-width="'+(r-ri)+'"/>';
+    } else {
+      items.forEach(function(it,idx){
+        var frac=it.n/total, a2=ang+frac*2*Math.PI;
+        var p1=pol(r,ang),p2=pol(r,a2),p3=pol(ri,a2),p4=pol(ri,ang), lg=frac>0.5?1:0;
+        paths+='<path d="M'+p1[0]+' '+p1[1]+' A'+r+' '+r+' 0 '+lg+' 1 '+p2[0]+' '+p2[1]+' L'+p3[0]+' '+p3[1]+' A'+ri+' '+ri+' 0 '+lg+' 0 '+p4[0]+' '+p4[1]+' Z" fill="'+(it.color||pal[idx%pal.length])+'"/>';
+        ang=a2;
+      });
+    }
+    var center='<text x="'+cx+'" y="'+(cy+8)+'" text-anchor="middle" style="font-size:26px;font-weight:800;fill:#1F2A5A">'+total+'</text>';
+    var leg=items.map(function(it,idx){var y=28+idx*22; return '<rect x="200" y="'+(y-11)+'" width="13" height="13" rx="2" fill="'+(it.color||pal[idx%pal.length])+'"/><text x="220" y="'+y+'" style="font-size:12.5px;fill:#3a3527">'+rhEsc(it.label)+' ('+it.n+')</text>';}).join('');
+    return '<svg viewBox="0 0 '+W+' '+H+'" class="rh-svg" preserveAspectRatio="xMidYMid meet">'+paths+center+leg+'</svg>';
+  }
+
   function renderCandidateCharts(lang, cfg){
     var t=translations[lang]; var cands=cfg.candidates; var total=cands.length; var done=callsCompletedCount(cfg);
+    var fmt=function(x){return '$'+Number(x).toLocaleString('es-MX');};
     var byLoc={};
     cands.forEach(function(c){ var v=parseSalaryAmount(c.salary); if(v==null) return; var city=((c.location||'').split(',')[0].trim())||'—'; (byLoc[city]=byLoc[city]||[]).push(v); });
     var salItems=Object.keys(byLoc).map(function(k){ var arr=byLoc[k]; var avg=Math.round(arr.reduce(function(x,y){return x+y;},0)/arr.length); return {label:k,n:avg,disp:'$'+Math.round(avg/1000)+'k'}; }).sort(function(a,b){return b.n-a.n;});
-    var lc={}; cands.forEach(function(c){ var city=((c.location||'').split(',')[0].trim())||'—'; lc[city]=(lc[city]||0)+1; });
-    var locItems=Object.keys(lc).map(function(k){return {label:k,n:lc[k]};}).sort(function(a,b){return b.n-a.n;});
+    var lv={}; cands.forEach(function(c){ var L=candLevelTxt(c,lang)||'—'; lv[L]=(lv[L]||0)+1; });
+    var lvItems=['L1','L2','L3','Lead','—'].filter(function(k){return lv[k];}).map(function(k){return {label:k,n:lv[k]};});
     var svals=cands.map(function(c){return parseSalaryAmount(c.salary);}).filter(function(v){return v!=null;}).sort(function(a,b){return a-b;});
-    var srTxt=svals.length?('$'+Number(svals[0]).toLocaleString('es-MX')+' – $'+Number(svals[svals.length-1]).toLocaleString('es-MX')):'—';
-    function box(title,note,svg){ return '<div class="rh-block"><h3 class="rh-h">'+title+'</h3>'+(note?'<p class="rh-note">'+note+'</p>':'')+svg+'</div>'; }
-    var stats='<div class="rh-salstats">'+
+    var srTxt=svals.length?(fmt(svals[0])+' – '+fmt(svals[svals.length-1])):'—';
+    function sub(title,svg){ return '<div class="rh-block"><h4 class="rh-subh">'+title+'</h4>'+svg+'</div>'; }
+    var candStats='<div class="rh-salstats">'+
       '<div class="rh-salstat"><div class="rh-salstat-v">'+total+'</div><div class="rh-salstat-l">'+t.homeCandidates+'</div></div>'+
       '<div class="rh-salstat"><div class="rh-salstat-v">'+done+'</div><div class="rh-salstat-l">'+t.chartDone+'</div></div>'+
       '<div class="rh-salstat"><div class="rh-salstat-v">'+srTxt+'</div><div class="rh-salstat-l">'+t.chartSalRange+'</div></div>'+
     '</div>';
-    var salChart=salItems.length?box(t.chartSalaryByLoc,t.chartSalaryByLocNote,rhSvgHBar(salItems)):'<div class="rh-block"><h3 class="rh-h">'+t.chartSalaryByLoc+'</h3><p class="rh-note">'+t.chartSalaryEmpty+'</p></div>';
-    var locChart=locItems.length?box(t.chartCandByLoc,'',rhSvgHBar(locItems)):'';
-    var callChart=box(t.chartCallStatus,'',rhSvgHBar([{label:t.chartDone,n:done,disp:done,g:true},{label:t.chartPending,n:total-done,disp:total-done}]));
-    document.getElementById('analysisCard').innerHTML='<div class="rh-analysis">'+stats+salChart+'<div class="rh-grid2">'+locChart+callChart+'</div></div>';
+    var callDonut=rhSvgDonut([{label:t.chartDone,n:done,color:'#2E9E5B'},{label:t.chartPending,n:total-done,color:'#AEB7C2'}]);
+    var lvDonut=lvItems.length?rhSvgDonut(lvItems):'<p class="rh-note">—</p>';
+    var salByLoc=salItems.length?('<div class="rh-block"><h4 class="rh-subh">'+t.chartSalaryByLoc+'</h4><p class="rh-note">'+t.chartSalaryByLocNote+'</p>'+rhSvgHBar(salItems)+'</div>'):('<div class="rh-block"><h4 class="rh-subh">'+t.chartSalaryByLoc+'</h4><p class="rh-note">'+t.chartSalaryEmpty+'</p></div>');
+    var candHtml=candStats+'<div class="rh-grid2">'+sub(t.chartCallStatus,callDonut)+sub(t.chartLevels,lvDonut)+'</div>'+salByLoc;
+    var marketHtml='';
+    if(cfg.marketAnalysis){
+      var m=cfg.marketAnalysis;
+      var csal=cands.map(function(c){var v=parseSalaryAmount(c.salary); if(v==null)return null; return {label:(c.shortName||c.name),n:v,disp:fmt(v),g:/Mazatl/i.test(c.location||'')};}).filter(Boolean).sort(function(a,b){return a.n-b.n;});
+      var svb=m.salaryBuckets.map(function(b){return b.n;}).sort(function(a,b){return b-a;}); var sth=svb.length>1?svb[1]:svb[0];
+      marketHtml='<div class="rh-block market-sep">'+
+        '<h3 class="rh-h" style="font-size:17px">'+t.marketTitle+'</h3>'+
+        '<p class="rh-note">'+(m.note?m.note[lang]:'')+'</p>'+
+        '<div class="rh-salstats">'+
+          '<div class="rh-salstat"><div class="rh-salstat-v">'+m.n+'</div><div class="rh-salstat-l">'+t.marketVacancies+'</div></div>'+
+          '<div class="rh-salstat"><div class="rh-salstat-v">'+fmt(m.median)+'</div><div class="rh-salstat-l">'+t.rhMedian+'</div></div>'+
+          '<div class="rh-salstat"><div class="rh-salstat-v">'+m.remote+'</div><div class="rh-salstat-l">'+t.marketRemote+'</div></div>'+
+        '</div>'+
+        '<div class="rh-grid2">'+sub(t.rhZonasTitle,rhSvgDonut(m.zonas.map(function(z){return {label:z.label,n:z.n};})))+sub(t.marketSalTitle,rhSvgVBars(m.salaryBuckets.map(function(b){return {label:b.label,n:b.n,hi:b.n>0&&b.n>=sth};})))+'</div>'+
+        '<div class="rh-grid2">'+sub(t.marketTopEmp,rhSvgHBar(m.topComp))+sub(t.marketCandVs,(csal.length?rhSvgCandMarket(csal,m.median,t.marketMedLabel+' '+fmt(m.median)):'<p class="rh-note">—</p>'))+'</div>'+
+      '</div>';
+      if(m.conclusion&&m.jdAdjustments){
+        var cc=(m.conclusion[lang]||[]).map(function(x){return '<li>'+rhEsc(x)+'</li>';}).join('');
+        var jj=(m.jdAdjustments[lang]||[]).map(function(x){return '<li>'+rhEsc(x)+'</li>';}).join('');
+        marketHtml+='<div class="eval-grid">'+
+          '<div class="eval-col"><h3 class="rh-h" style="font-size:16px">'+t.evalConcl+'</h3><ul class="rh-list">'+cc+'</ul></div>'+
+          '<div class="eval-col eval-jd"><h3 class="rh-h" style="font-size:16px">'+t.evalJd+'</h3><ul class="rh-list">'+jj+'</ul></div>'+
+        '</div>';
+      }
+    }
+    document.getElementById('analysisCard').innerHTML='<div class="rh-analysis">'+candHtml+marketHtml+'</div>';
   }
 
   function applyLang(lang) {
@@ -1302,6 +1387,8 @@
       ov('[data-i18n="statStatusHint"]', vl.statStatusHint ? vl.statStatusHint[lang] : translations[lang].statStatusHintVacancy);
       ov('[data-i18n="analysisTitle"]', vl.analysisTitle ? vl.analysisTitle[lang] : translations[lang].analysisTitleVacancy);
       ov('[data-i18n="analysisHint"]', vl.analysisHint ? vl.analysisHint[lang] : translations[lang].analysisHintVacancy);
+    } else if (cfg.marketAnalysis) {
+      if (compSection) compSection.style.display = 'none';
     } else if (compSection) {
       compSection.style.display = '';
     }
